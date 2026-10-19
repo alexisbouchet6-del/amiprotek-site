@@ -1,6 +1,6 @@
-# Site AMIPROTEK
+# Site AMI TECH
 
-Site vitrine d'AMIPROTEK, entreprise de services informatiques basée à Irigny (69) : dépannage, réseau, serveurs NAS, vidéosurveillance, alarme, téléphonie IP et sécurité des données.
+Site vitrine d'AMI TECH (nom commercial d'AMIPROTEK SAS), entreprise de services informatiques basée à Irigny (69) : dépannage, réseau, serveurs NAS, vidéosurveillance, alarme, téléphonie IP et sécurité des données.
 
 Le site remplace l'ancienne version Wix. Il est statique, rapide, sans cookie ni traceur, et comprend un **diagnostic guidé** qui oriente le visiteur vers la bonne prestation selon son problème.
 
@@ -102,6 +102,34 @@ Options du build :
 | Les conditions d'intervention | `src/site.json`, bloc `conditions` |
 | Une question ou un résultat du diagnostic | `src/data/diagnostic.json` |
 | Les mentions légales | `src/site.json`, bloc `legal` |
+
+### Ajouter les photos des réalisations
+
+Déposez une photo par service dans `src/assets/img/offres/`, nommée d'après l'identifiant du service :
+
+| Service | Fichier |
+|---|---|
+| Infrastructure réseau | `reseau.jpg` |
+| Serveur NAS | `nas.jpg` |
+| Vidéosurveillance et alarme | `videosurveillance.jpg` |
+| Maintenance informatique | `maintenance.jpg` |
+| Internet et téléphonie | `telephonie.jpg` |
+| Sécurité des données | `securite.jpg` |
+
+Les formats `.webp`, `.jpg`, `.png` et `.avif` sont acceptés. Le build détecte la photo automatiquement et l'affiche sur l'accueil et sur la page Services. Recommandations : format paysage 4:3, 1600 px de large, moins de 300 Ko. Tant qu'une photo manque, un emplacement réservé s'affiche ; en production (`--strict`), il ne montre que le pictogramme du service.
+
+### Ajouter des avis Google
+
+Les avis sont saisis dans `src/site.json`, bloc `reviews` : le site ne charge aucun script Google, ne dépose aucun cookie et reste rapide.
+
+| Champ | Contenu |
+|---|---|
+| `google_url` | Lien de votre fiche Google (« Voir tous nos avis ») ; chaque avis du carrousel y renvoie |
+| `write_url` | Lien « Laisser un avis » fourni par Google Business Profile |
+| `rating`, `count` | Note moyenne et nombre d'avis affichés sur votre fiche (à mettre à jour) |
+| `items` | 5 à 10 avis : `author`, `rating` (1 à 5), `date` (`AAAA-MM`), `text`, `url` (optionnel) |
+
+La date de chaque avis est obligatoire (article L111-7-2 du Code de la consommation). La mention indiquant que les avis sont sélectionnés et non vérifiés est générée automatiquement.
 
 Chaque résultat du diagnostic peut référencer des tarifs (`"tarifs": ["ssd"]`) et un service (`"service": "maintenance"`) par leur identifiant. Les tests vérifient que chaque question est accessible et que chaque référence existe.
 

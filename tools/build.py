@@ -41,11 +41,10 @@ MAX_PARTIAL_DEPTH = 5
 REQUIRED_META = ("title", "description")
 EXTERNAL_SCHEMES = ("http", "https", "mailto", "tel", "data")
 
-# Couleurs de câble autorisées : chacune correspond à une classe CSS .cable-<nom>.
-CABLE_COLORS = {"blue", "yellow", "red", "green", "orange", "purple"}
 
 LEGAL_LABELS = {
     "raison_sociale": "Raison sociale",
+    "nom_commercial": "Nom commercial",
     "forme_juridique": "Forme juridique",
     "capital": "Capital social",
     "siege": "Siège social",
@@ -149,13 +148,80 @@ JACK_SVG = (
     "</svg>"
 )
 
+# Pictogrammes des services (trait, 24 x 24), coloriés en CSS via currentColor.
+ICONS = {
+    "reseau": '<circle cx="12" cy="5" r="2.2"/><circle cx="5" cy="19" r="2.2"/><circle cx="19" cy="19" r="2.2"/>'
+              '<path d="M12 7.2v4.3M12 11.5 6.5 17.2M12 11.5l5.5 5.7"/>',
+    "nas": '<rect x="4" y="3.5" width="16" height="7" rx="1.5"/><rect x="4" y="13.5" width="16" height="7" rx="1.5"/>'
+           '<path d="M7.5 7h.01M7.5 17h.01M11 7h6M11 17h6"/>',
+    "videosurveillance": '<path d="M3 8.5 15.5 5l1.6 5.6L4.6 14.1z"/><path d="m17.1 10.6 3.4 1.2M7 13.4l1.1 3.6H4.5"/>'
+                         '<path d="M4.5 17v3"/>',
+    "maintenance": '<path d="M14.7 6.3a4 4 0 0 0-5.2 5.2L4 17l3 3 5.5-5.5a4 4 0 0 0 5.2-5.2l-2.6 2.6-2.4-.6-.6-2.4z"/>',
+    "telephonie": '<path d="M6.6 10.8a15 15 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20'
+                  'a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z"/>',
+    "securite": '<path d="M12 3 4.5 6v5.5c0 4.6 3.2 8.4 7.5 9.5 4.3-1.1 7.5-4.9 7.5-9.5V6z"/>'
+                '<rect x="9" y="10.5" width="6" height="5" rx="1"/><path d="M10.2 10.5V9a1.8 1.8 0 0 1 3.6 0v1.5"/>',
+}
+PHOTO_DIR = "assets/img/offres"
+PHOTO_EXTENSIONS = (".webp", ".jpg", ".jpeg", ".png", ".avif")
+
+
+def icon(service_id: str, css_class: str = "icon") -> str:
+    return (
+        f'<svg class="{css_class}" viewBox="0 0 24 24" aria-hidden="true" focusable="false">'
+        f"{ICONS[service_id]}</svg>"
+    )
+
+
+def find_photo(src: Path, service_id: str) -> str | None:
+    """Photo déposée dans src/assets/img/offres/<service>.<ext>, détectée automatiquement."""
+    for ext in PHOTO_EXTENSIONS:
+        if (src / PHOTO_DIR / f"{service_id}{ext}").is_file():
+            return f"{PHOTO_DIR}/{service_id}{ext}"
+    return None
+
+
+def photo_figure(ctx: dict, svc: dict, css_class: str) -> str:
+    """Photo du service, ou emplacement réservé tant qu'aucune photo n'est fournie.
+
+    En production (--strict), l'emplacement vide reste une tuile sobre avec le
+    pictogramme, sans texte « à venir » ; en développement, il indique le nom
+    du fichier attendu.
+    """
+    photo = find_photo(ctx["build"]["src"], svc["id"])
+    if photo:
+        return (
+            f'<figure class="{css_class}"><img src="{esc(photo)}" alt="{esc(svc["name"])}, réalisation AMI TECH" '
+            f'loading="lazy" decoding="async"></figure>'
+        )
+    hint = ""
+    if not ctx["build"]["strict"]:
+        hint = f'<span class="photo-slot__hint">Photo à déposer : {esc(PHOTO_DIR)}/{esc(svc["id"])}.jpg</span>'
+    return (
+        f'<figure class="{css_class} photo-slot" aria-hidden="true">'
+        f'{icon(svc["id"], "photo-slot__icon")}{hint}</figure>'
+    )
+
+
+def gen_wordmark(ctx: dict) -> str:
+    """Logotype en texte : première lettre du dernier mot en rouge (AMI TECH)."""
+    words = ctx["site"]["name"].split()
+    last = words[-1]
+    head = " ".join(words[:-1])
+    head = f"{esc(head)} " if head else ""
+    return f'{head}<span class="wordmark__accent">{esc(last[0])}</span>{esc(last[1:])}'
+
+
+def gen_brand_line(ctx: dict) -> str:
+    items = "".join(f"<li>{esc(t)}</li>" for t in ctx["site"]["brand"]["tagline"])
+    return f'<ul class="brand-line" aria-label="Domaines d\'activité">{items}</ul>'
+
 
 def gen_hero_ports(ctx: dict) -> str:
     items = []
     for svc in ctx["site"]["services"]:
         items.append(
-            f'<li><a class="port cable-{esc(svc["color"])}" href="services.html#{esc(svc["id"])}" '
-            f'data-port>'
+            f'<li><a class="port" href="services.html#{esc(svc["id"])}" data-port>'
             f'<span class="port__jack" aria-hidden="true">{JACK_SVG}'
             f'<span class="port__led"></span></span>'
             f'<span class="port__name">{esc(svc["port"])}</span></a></li>'
@@ -167,13 +233,24 @@ def gen_services_rows(ctx: dict) -> str:
     rows = []
     for svc in ctx["site"]["services"]:
         rows.append(
-            f'<li class="svc-row cable-{esc(svc["color"])}">'
-            f'<span class="svc-row__strip" aria-hidden="true"></span>'
+            f'<li class="svc-row">'
+            f'<span class="svc-row__icon">{icon(svc["id"])}</span>'
             f'<h3 class="svc-row__name"><a href="services.html#{esc(svc["id"])}">'
             f'{esc(svc["name"])}</a></h3>'
             f'<p class="svc-row__text">{esc(svc["short"])}</p></li>'
         )
     return "\n".join(rows)
+
+
+def gen_offers_gallery(ctx: dict) -> str:
+    cards = []
+    for svc in ctx["site"]["services"]:
+        cards.append(
+            f'<li class="offer"><a class="offer__link" href="services.html#{esc(svc["id"])}">'
+            f'{photo_figure(ctx, svc, "offer__media")}'
+            f'<span class="offer__name">{esc(svc["name"])}</span></a></li>'
+        )
+    return f'<ul class="offers">{"".join(cards)}</ul>'
 
 
 def gen_services_detail(ctx: dict) -> str:
@@ -188,19 +265,104 @@ def gen_services_detail(ctx: dict) -> str:
         )
         subject = esc(f"Demande de devis : {svc['name']}")
         blocks.append(
-            f'<section class="svc cable-{esc(svc["color"])}" id="{esc(svc["id"])}" '
-            f'aria-labelledby="{esc(svc["id"])}-title">'
-            f'<span class="svc__strip" aria-hidden="true"></span>'
+            f'<section class="svc" id="{esc(svc["id"])}" aria-labelledby="{esc(svc["id"])}-title">'
             f'<div class="svc__head">'
+            f'<span class="svc__icon">{icon(svc["id"])}</span>'
             f'<h2 id="{esc(svc["id"])}-title">{esc(svc["name"])}</h2>'
             f'<p class="svc__intro">{esc(svc["intro"])}</p>'
             f'<p class="svc__audience"><strong>Pour qui :</strong> {esc(svc["audience"])}</p>'
-            f"{brands}</div>"
-            f'<div class="svc__body"><h3>Ce que nous faisons</h3><ul class="checklist">{points}</ul>'
+            f"{brands}"
+            f'<h3>Ce que nous faisons</h3><ul class="checklist">{points}</ul>'
             f'<a class="btn btn--primary" href="mailto:{esc(contact["email"])}?subject={subject}">'
-            f"Demander un devis</a></div></section>"
+            f"Demander un devis</a></div>"
+            f'{photo_figure(ctx, svc, "svc__media")}</section>'
         )
     return "\n".join(blocks)
+
+
+STAR_PATH = "M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4l-5.9 3.1 1.2-6.5-4.8-4.6 6.6-.9z"
+
+
+def stars(rating: float | int) -> str:
+    full = int(float(rating) + 0.5)  # 4,9 -> 5 étoiles pleines
+    items = "".join(
+        f'<svg class="star{" star--on" if i < full else ""}" viewBox="0 0 24 24" aria-hidden="true" '
+        f'focusable="false"><path d="{STAR_PATH}"/></svg>'
+        for i in range(5)
+    )
+    return f'<span class="stars" role="img" aria-label="{esc(rating)} sur 5">{items}</span>'
+
+
+def format_review_date(value: str) -> str:
+    """'2026-03' -> 'mars 2026' (format AAAA-MM)."""
+    months = ("janvier", "février", "mars", "avril", "mai", "juin", "juillet",
+              "août", "septembre", "octobre", "novembre", "décembre")
+    match = re.fullmatch(r"(\d{4})-(\d{2})", value or "")
+    if not match or not 1 <= int(match.group(2)) <= 12:
+        return ""
+    return f"{months[int(match.group(2)) - 1]} {match.group(1)}"
+
+
+def gen_reviews(ctx: dict) -> str:
+    """Carrousel d'avis Google. Chaque avis renvoie vers la fiche Google (nouvel onglet).
+
+    Les avis sont saisis dans site.json : le site ne contacte jamais Google
+    (pas de script tiers, pas de cookie). La mention finale répond à
+    l'article L111-7-2 du Code de la consommation (sélection, absence de
+    vérification).
+    """
+    reviews = ctx["site"]["reviews"]
+    google_url = reviews.get("google_url", "")
+    cards = []
+    for review in reviews["items"]:
+        when = format_review_date(review.get("date", ""))
+        meta = esc(review["author"]) + (f", {esc(when)}" if when else "")
+        rating = stars(review["rating"]) if review.get("rating") else ""
+        body = (
+            f'{rating}<blockquote class="review__text"><p>{esc(review["text"])}</p></blockquote>'
+            f'<figcaption class="review__meta"><span class="review__author">{meta}</span>'
+            f'<span class="review__source">Avis Google</span></figcaption>'
+        )
+        target = review.get("url") or google_url
+        if target:
+            body = (
+                f'<a class="review__link" href="{esc(target)}" target="_blank" rel="noopener" '
+                f'aria-label="Avis de {esc(review["author"])}, lire sur Google (nouvel onglet)">{body}</a>'
+            )
+        cards.append(f'<li class="review"><figure class="review__figure">{body}</figure></li>')
+
+    summary = ""
+    if reviews.get("rating") and reviews.get("count"):
+        score = float(str(reviews["rating"]).replace(",", "."))
+        summary = (
+            f'<p class="reviews__score">{stars(score)}'
+            f'<span><strong>{esc(reviews["rating"])}/5</strong> sur {esc(reviews["count"])} avis Google</span></p>'
+        )
+    controls = ""
+    if len(reviews["items"]) > 1:
+        controls = (
+            '<div class="reviews__controls" data-carousel-controls hidden>'
+            '<button type="button" class="carousel-btn" data-prev aria-label="Avis précédent">'
+            '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15 5 8 12l7 7"/></svg></button>'
+            '<span class="reviews__count" data-count aria-live="polite"></span>'
+            '<button type="button" class="carousel-btn" data-next aria-label="Avis suivant">'
+            '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m9 5 7 7-7 7"/></svg></button>'
+            "</div>"
+        )
+    links = []
+    if google_url:
+        links.append(f'<a href="{esc(google_url)}" target="_blank" rel="noopener">Voir tous nos avis sur Google</a>')
+    if reviews.get("write_url"):
+        links.append(f'<a href="{esc(reviews["write_url"])}" target="_blank" rel="noopener">Laisser un avis</a>')
+    links_html = f'<p class="reviews__links">{"".join(links)}</p>' if links else ""
+    return (
+        f"{summary}"
+        f'<div class="reviews__viewport" data-carousel tabindex="0" role="region" '
+        f'aria-label="Avis clients, faites défiler horizontalement">'
+        f'<ul class="reviews__track" data-track>{"".join(cards)}</ul></div>{controls}{links_html}'
+        '<p class="reviews__legal">Avis publiés par nos clients sur notre fiche Google, sélectionnés par nos soins. '
+        "Ils ne font pas l'objet d'une procédure de vérification de notre part.</p>"
+    )
 
 
 def all_tarifs(site: dict) -> list[dict]:
@@ -326,6 +488,7 @@ def gen_jsonld(ctx: dict) -> str:
         "@context": "https://schema.org",
         "@type": "ComputerRepair",
         "name": site["name"],
+        "legalName": site["legal"]["raison_sociale"],
         "url": site["url"],
         "telephone": contact["phone_link"],
         "email": contact["email"],
@@ -349,7 +512,11 @@ GENERATORS: dict[str, Generator] = {
     "base_tag": gen_base_tag,
     "robots_meta": gen_robots_meta,
     "preview_fonts": gen_preview_fonts,
+    "wordmark": gen_wordmark,
+    "brand_line": gen_brand_line,
     "hero_ports": gen_hero_ports,
+    "offers_gallery": gen_offers_gallery,
+    "reviews": gen_reviews,
     "services_rows": gen_services_rows,
     "services_detail": gen_services_detail,
     "tarifs_toc": gen_tarifs_toc,
@@ -371,8 +538,14 @@ def validate_site(site: dict) -> None:
     if len(ids) != len(set(ids)):
         raise BuildError("site.json : identifiants de services en double")
     for svc in site["services"]:
-        if svc["color"] not in CABLE_COLORS:
-            raise BuildError(f"service {svc['id']} : couleur inconnue {svc['color']!r}")
+        if svc["id"] not in ICONS:
+            raise BuildError(f"service {svc['id']} : aucun pictogramme défini dans ICONS")
+    for review in site["reviews"]["items"]:
+        if not review.get("author") or not review.get("text"):
+            raise BuildError("avis : auteur et texte obligatoires")
+        rating = review.get("rating")
+        if rating not in (None, "") and (not isinstance(rating, (int, float)) or not 1 <= rating <= 5):
+            raise BuildError(f"avis de {review['author']} : note hors de 1 à 5")
     group_ids = [g["id"] for g in site["tarifs"]]
     tarif_ids = [t["id"] for t in all_tarifs(site)]
     if len(group_ids + tarif_ids) != len(set(group_ids + tarif_ids)):
@@ -530,6 +703,12 @@ def build(src: Path = SRC, dist: Path = DIST, strict: bool = False, preview: boo
     recommended = recommended_legal(site)
     if recommended:
         warnings.append("mentions recommandées absentes : " + ", ".join(recommended))
+    undated = [r["author"] for r in site["reviews"]["items"] if not format_review_date(r.get("date", ""))]
+    if undated:
+        warnings.append("avis sans date (AAAA-MM, obligatoire à l'affichage) : " + ", ".join(undated))
+    no_photo = [s["id"] for s in site["services"] if not find_photo(src, s["id"])]
+    if no_photo:
+        warnings.append(f"photos manquantes dans src/{PHOTO_DIR}/ : " + ", ".join(no_photo))
 
     layout = (src / "layouts" / "base.html").read_text(encoding="utf-8")
     partials = {p.stem: p.read_text(encoding="utf-8") for p in (src / "partials").glob("*.html")}
@@ -549,7 +728,7 @@ def build(src: Path = SRC, dist: Path = DIST, strict: bool = False, preview: boo
             "site": site,
             "diagnostic": diagnostic,
             "page": {**meta, "slug": slug, "url": page_url(site, slug)},
-            "build": {"year": str(dt.date.today().year), "preview": preview, "src": src},
+            "build": {"year": str(dt.date.today().year), "preview": preview, "src": src, "strict": strict},
         }
         ctx["page_content"] = render(body, ctx, partials, GENERATORS)
         output = render(layout, ctx, partials, GENERATORS)
@@ -590,7 +769,7 @@ def write_seo_files(site: dict, dist: Path, urls: list[str]) -> None:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Build du site AMIPROTEK")
+    parser = argparse.ArgumentParser(description="Build du site AMI TECH")
     parser.add_argument("--strict", action="store_true", help="échoue si des mentions légales manquent")
     parser.add_argument("--preview", action="store_true", help="charge la police depuis Google Fonts")
     args = parser.parse_args()

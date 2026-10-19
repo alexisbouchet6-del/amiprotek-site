@@ -1,8 +1,11 @@
 <header class="site-header">
     <div class="site-header__inner">
       <a class="brand" href="index.html" aria-label="{{ site.name }}, accueil">
-        <span class="brand__mark" aria-hidden="true"><span></span><span></span><span></span></span>
-        <span class="brand__name">{{ site.name }}</span>
+        <span class="brand__badge"><img src="assets/img/artisan.png" width="60" height="41" alt=""></span>
+        <span class="brand__text">
+          <span class="wordmark">{{@ wordmark }}</span>
+          {{@ brand_line }}
+        </span>
       </a>
       <nav class="site-nav" aria-label="Navigation principale">
         <ul>

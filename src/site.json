@@ -1,8 +1,8 @@
 {
-  "name": "AMIPROTEK",
+  "name": "AMI TECH",
   "url": "https://www.amiprotek.fr",
   "lang": "fr",
-  "tagline": "Dépannage informatique, réseau et sécurité à Irigny",
+  "tagline": "Informatique, réseaux, vidéo-surveillance et alarmes connectées à Irigny",
   "contact": {
     "phone_display": "04 82 53 24 47",
     "phone_link": "+33482532447",
@@ -16,6 +16,7 @@
   "prices_note": "Prix TTC pour les particuliers, HT pour les professionnels.",
   "legal": {
     "raison_sociale": "AMIPROTEK",
+    "nom_commercial": "AMI TECH",
     "forme_juridique": "Société par actions simplifiée (SAS)",
     "capital": "",
     "siege": "30 rue du Vieux Port, 69540 Irigny",
@@ -33,7 +34,6 @@
       "id": "reseau",
       "name": "Infrastructure réseau",
       "port": "Réseau",
-      "color": "blue",
       "short": "Câblage, Wi-Fi et interconnexion de sites, conçus après une étude de vos locaux.",
       "intro": "Nous concevons, installons et sécurisons le réseau de votre entreprise. Chaque projet commence par une étude de vos locaux et de vos usages, pour un réseau fiable aujourd'hui et capable d'évoluer demain.",
       "points": [
@@ -50,7 +50,6 @@
       "id": "nas",
       "name": "Serveur NAS",
       "port": "Stockage NAS",
-      "color": "yellow",
       "short": "Vos fichiers et sauvegardes au même endroit, partagés et accessibles à distance.",
       "intro": "Un serveur NAS regroupe vos fichiers, documents, sauvegardes et contenus multimédias sur un seul équipement. Vos collaborateurs y accèdent en toute sécurité, au bureau comme à distance.",
       "points": [
@@ -67,7 +66,6 @@
       "id": "videosurveillance",
       "name": "Vidéosurveillance et alarme",
       "port": "Vidéo et alarme",
-      "color": "red",
       "short": "Caméras consultables à distance et alarmes anti-intrusion reliées à votre smartphone.",
       "intro": "Nous installons des caméras et des alarmes pour protéger vos locaux. Vous consultez les images en direct ou les enregistrements depuis votre téléphone, et vous êtes alerté immédiatement en cas d'intrusion.",
       "points": [
@@ -84,7 +82,6 @@
       "id": "maintenance",
       "name": "Maintenance informatique",
       "port": "Maintenance",
-      "color": "green",
       "short": "Dépannage et entretien de vos ordinateurs, serveurs et imprimantes, sur site ou à distance.",
       "intro": "Nous entretenons et dépannons vos équipements avant que la panne ne bloque votre activité. Nous intervenons sur place à Irigny et dans la région lyonnaise, ou à distance quand c'est possible.",
       "points": [
@@ -101,7 +98,6 @@
       "id": "telephonie",
       "name": "Internet et téléphonie",
       "port": "Internet et téléphonie",
-      "color": "orange",
       "short": "Une connexion adaptée à votre activité et une téléphonie IP configurée pour votre équipe.",
       "intro": "Nous sélectionnons l'offre internet adaptée à vos usages, du télétravail à l'hébergement de serveurs. Pour les professionnels, nous installons et gérons votre téléphonie IP.",
       "points": [
@@ -117,7 +113,6 @@
       "id": "securite",
       "name": "Sécurité des données",
       "port": "Sécurité des données",
-      "color": "purple",
       "short": "Sauvegardes, protection du réseau et prévention des attaques informatiques.",
       "intro": "Nous protégeons vos données sensibles et votre réseau contre les attaques. Sauvegardes, règles de sécurité et contrôles sont adaptés à la taille de votre structure.",
       "points": [
@@ -320,14 +315,32 @@
       ]
     }
   ],
-  "testimonial": {
-    "quote": "Bon conseil et efficacité des interventions, travail propre et soigné, contact très agréable, facilement joignable et ponctuel, on recommande vivement.",
-    "author": "Jacquelin Morel",
-    "source": "Avis Google"
-  },
   "conditions": [
     "Nous ne modifions pas le matériel (tuning, watercooling…) et ne réalisons aucune opération qui mettrait fin à la garantie des produits.",
     "Nous n'assurons pas la sauvegarde de vos données et déclinons toute responsabilité en cas de perte lors d'une intervention. Vos données restent votre propriété exclusive. Un disque dur est un support de stockage, pas une sauvegarde : effectuez une sauvegarde avant toute prise en charge.",
     "Le matériel est testé selon les conditions standard définies par les constructeurs."
-  ]
+  ],
+  "reviews": {
+    "google_url": "",
+    "write_url": "",
+    "rating": "",
+    "count": "",
+    "items": [
+      {
+        "author": "Jacquelin Morel",
+        "rating": "",
+        "date": "",
+        "text": "Bon conseil et efficacité des interventions, travail propre et soigné, contact très agréable, facilement joignable et ponctuel, on recommande vivement.",
+        "url": ""
+      }
+    ]
+  },
+  "brand": {
+    "tagline": [
+      "Informatique",
+      "Réseaux",
+      "Vidéo-surveillance",
+      "Alarmes connectées"
+    ]
+  }
 }

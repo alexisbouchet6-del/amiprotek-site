@@ -13,7 +13,7 @@
       </div>
     </div>
     <div class="panel" data-panel>
-      <p class="panel__label" id="panel-label">Nos services, branchés sur vos besoins</p>
+      <div class="panel__head"><p class="panel__label" id="panel-label">Nos services</p><p class="panel__status" aria-hidden="true"><span class="panel__status-led"></span>6 liaisons actives</p></div>
       <div class="panel__rack">
         <span class="panel__screw" aria-hidden="true"></span>
         <ul class="panel__ports" aria-labelledby="panel-label">
@@ -58,6 +58,14 @@
   </div>
 </section>
 
+<section class="section offers-section" aria-labelledby="offers-title">
+  <div class="wrap">
+    <h2 id="offers-title">Nos réalisations en images</h2>
+    <p class="section__lead">Installations réseau, caméras, alarmes, serveurs et ateliers : un aperçu concret de ce que nous mettons en place chez nos clients.</p>
+{{@ offers_gallery }}
+  </div>
+</section>
+
 <section class="section method" aria-labelledby="method-title">
   <div class="wrap">
     <h2 id="method-title">Comment nous travaillons</h2>
@@ -83,13 +91,10 @@
   </div>
 </section>
 
-<section class="section quote" aria-labelledby="quote-title">
+<section class="section reviews" aria-labelledby="reviews-title">
   <div class="wrap">
-    <h2 id="quote-title" class="sr-only">Avis client</h2>
-    <figure class="quote__figure">
-      <blockquote><p>{{ site.testimonial.quote }}</p></blockquote>
-      <figcaption>{{ site.testimonial.author }}, {{ site.testimonial.source }}</figcaption>
-    </figure>
+    <h2 id="reviews-title">Nos clients nous font confiance</h2>
+{{@ reviews }}
   </div>
 </section>
 

@@ -81,11 +81,22 @@ class DataTests(unittest.TestCase):
     def test_legal_notices_are_complete(self) -> None:
         self.assertEqual(build.missing_legal(self.site), [])
 
-    def test_unknown_cable_color_is_rejected(self) -> None:
+    def test_service_without_icon_is_rejected(self) -> None:
         site = copy.deepcopy(self.site)
-        site["services"][0]["color"] = "rose"
+        site["services"][0]["id"] = "inconnu"
         with self.assertRaises(build.BuildError):
             build.validate_site(site)
+
+    def test_review_rating_out_of_range_is_rejected(self) -> None:
+        site = copy.deepcopy(self.site)
+        site["reviews"]["items"][0]["rating"] = 6
+        with self.assertRaises(build.BuildError):
+            build.validate_site(site)
+
+    def test_review_date_format(self) -> None:
+        self.assertEqual(build.format_review_date("2026-03"), "mars 2026")
+        self.assertEqual(build.format_review_date("2026-13"), "")
+        self.assertEqual(build.format_review_date(""), "")
 
 
 class BuildTests(unittest.TestCase):
@@ -163,8 +174,26 @@ class BuildTests(unittest.TestCase):
     def test_title_carries_company_name_once(self) -> None:
         text = (self.dist / "tarifs.html").read_text(encoding="utf-8")
         title = text.split("<title>", 1)[1].split("</title>", 1)[0]
-        self.assertTrue(title.endswith("| AMIPROTEK"))
-        self.assertEqual(title.count("AMIPROTEK"), 1)
+        name = json.loads((ROOT / "src" / "site.json").read_text(encoding="utf-8"))["name"]
+        self.assertTrue(title.endswith(f"| {name}"))
+        self.assertEqual(title.count(name), 1)
+
+    def test_reviews_carry_legal_notice(self) -> None:
+        text = (self.dist / "index.html").read_text(encoding="utf-8")
+        self.assertIn("reviews__track", text)
+        self.assertIn("procédure de vérification", text)
+
+    def test_photo_slots_show_hint_only_outside_production(self) -> None:
+        dev = (self.dist / "index.html").read_text(encoding="utf-8")
+        strict_dist = self.tmp / "strict-photos"
+        build.build(dist=strict_dist, strict=True)
+        prod = (strict_dist / "index.html").read_text(encoding="utf-8")
+        missing = [s for s in json.loads((ROOT / "src" / "site.json").read_text(encoding="utf-8"))["services"]
+                   if not build.find_photo(build.SRC, s["id"])]
+        if not missing:
+            self.skipTest("toutes les photos sont fournies")
+        self.assertIn("Photo à déposer", dev)
+        self.assertNotIn("Photo à déposer", prod)
 
 
 class FontTests(unittest.TestCase):
