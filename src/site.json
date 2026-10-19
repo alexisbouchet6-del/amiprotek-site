@@ -10,7 +10,7 @@
     "street": "30 rue du Vieux Port",
     "postcode": "69540",
     "city": "Irigny",
-    "map_url": "https://www.google.com/maps/search/?api=1&query=AMIPROTEK%2C%2030%20rue%20du%20Vieux%20Port%2C%2069540%20Irigny",
+    "map_url": "https://maps.app.goo.gl/mrtZN27PJw5MLbcf7",
     "pagesjaunes_url": "https://www.pagesjaunes.fr/pros/53415754"
   },
   "prices_note": "Prix TTC pour les particuliers, HT pour les professionnels.",
@@ -321,17 +321,52 @@
     "Le matériel est testé selon les conditions standard définies par les constructeurs."
   ],
   "reviews": {
-    "google_url": "https://www.google.com/maps/search/?api=1&query=AMIPROTEK%2C%2030%20rue%20du%20Vieux%20Port%2C%2069540%20Irigny",
+    "google_url": "https://maps.app.goo.gl/mrtZN27PJw5MLbcf7",
     "write_url": "",
-    "rating": "",
-    "count": "",
+    "rating": "4,9",
+    "count": "132",
     "items": [
       {
-        "author": "Jacquelin Morel",
+        "author": "Christian F.",
         "rating": "",
-        "date": "",
-        "text": "Bon conseil et efficacité des interventions, travail propre et soigné, contact très agréable, facilement joignable et ponctuel, on recommande vivement.",
-        "url": ""
+        "date": "2026-08",
+        "url": "",
+        "text": "Petite boutique très simple sans artifices superflu, mais un très bon accueil, a l’écoute du client et très Pro, après le diagnostique la réparation tout ça en un jour avec la prestation très correcte, je suis ravi d’avoir trouver ce magasin et je le recommande."
+      },
+      {
+        "author": "Benjamin L.",
+        "rating": "",
+        "date": "2026-03",
+        "url": "",
+        "text": "Je fais appel à cette société pour mon système d’alarme et de caméras. Très professionnels, ils sont toujours de bon conseil pour améliorer mon installation, que ce soit pour les mises à jour ou la maintenance…"
+      },
+      {
+        "author": "Julien J.",
+        "rating": "",
+        "date": "2026-02",
+        "url": "",
+        "text": "Entreprise à taille humaine offrant un service après-vente personnalisé et efficace. L’un des points forts réside dans le fait d’avoir toujours le même interlocuteur, qui connaît parfaitement notre dossier et en assure le suivi de bout en…"
+      },
+      {
+        "author": "Arthur",
+        "rating": "",
+        "date": "2026-02",
+        "url": "",
+        "text": "Sérieux efficace je conseil ! Des gens qui ont une conscience professionnelle aujourd’hui il y en a plus donc quand c’est le k il faut le dire ;) bravo !"
+      },
+      {
+        "author": "Rodolphe V.",
+        "rating": "",
+        "date": "2025-12",
+        "url": "",
+        "text": "Alexis et son équipe sont de vrais professionnels et à l'écoute. Je recommande cette entreprise pour vos alarmes et réseaux informatique."
+      },
+      {
+        "author": "Alliance Rénovation",
+        "rating": "",
+        "date": "2025-10",
+        "url": "",
+        "text": "Excellente expérience avec AMIPROTEK. L’équipe est disponible, professionnelle et très compétente, que ce soit pour la partie informatique ou la sécurité. Intervention rapide, tarifs corrects et surtout un vrai accompagnement pour trouver…"
       }
     ]
   },
