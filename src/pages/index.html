@@ -21,27 +21,14 @@
       <li>Entreprise artisanale à Irigny</li>
     </ul>
 
-    <div class="hub" data-hub>
-      <div class="hub__head">
-        <div class="hub__title">
-          <span class="hub__title-icon" aria-hidden="true"></span>
-          <div>
-            <p class="hub__name" id="hub-title">Écosystème AMI TECH</p>
-            <p class="hub__sub">Un interlocuteur pour tout votre équipement</p>
-          </div>
-        </div>
-        <p class="h-status"><span class="h-status__dot" aria-hidden="true"></span>6 services connectés</p>
+    <div class="console">
+      <div class="console__head">
+        <p class="console__title" id="console-title">Vos équipements, suivis par {{ site.name }}</p>
+        <p class="console__meta">6 domaines couverts</p>
       </div>
-      <div class="hub__body">
-        <svg class="hub__links" aria-hidden="true" focusable="false" data-links></svg>
-        <div class="hub__core" data-core>
-          <span class="hub__core-name">{{@ wordmark }}</span>
-          <span class="hub__core-sub">Irigny</span>
-        </div>
-        <ul class="hub__nodes" aria-labelledby="hub-title">
-{{@ hub_nodes }}
-        </ul>
-      </div>
+      <ul class="console__grid" aria-labelledby="console-title">
+{{@ console }}
+      </ul>
     </div>
   </div>
 </section>
@@ -76,17 +63,6 @@
         <span class="h-card__more">Réagir correctement</span></a></li>
     </ul>
     <p class="h-more"><a href="diagnostic.html">Autre situation : lancer le diagnostic complet</a></p>
-  </div>
-</section>
-
-<section class="h-section h-section--alt" aria-labelledby="services-title">
-  <div class="wrap">
-    <p class="h-kicker">Nos services</p>
-    <h2 id="services-title">Une seule équipe pour tout votre équipement</h2>
-    <p class="h-lead">Informatique, réseau, téléphonie et sécurité de vos locaux : un interlocuteur qui connaît votre installation de bout en bout.</p>
-    <ul class="svc-list">
-{{@ services_rows }}
-    </ul>
   </div>
 </section>
 

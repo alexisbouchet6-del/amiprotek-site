@@ -210,16 +210,17 @@ def gen_brand_line(ctx: dict) -> str:
     return f'<ul class="brand-line" aria-label="Domaines d\'activité">{items}</ul>'
 
 
-def gen_hub_nodes(ctx: dict) -> str:
-    """Nœuds du schéma d'accueil : un par service, reliés au centre AMI TECH."""
-    items = []
+def gen_console(ctx: dict) -> str:
+    """Console de l'accueil : une tuile cliquable par service, avec son état."""
+    tiles = []
     for svc in ctx["site"]["services"]:
-        items.append(
-            f'<li class="hub__item"><a class="hub__node" href="services.html#{esc(svc["id"])}" data-node>'
-            f'<span class="hub__icon">{icon(svc["id"])}<span class="hub__led" aria-hidden="true"></span></span>'
-            f'<span class="hub__label">{esc(svc["port"])}</span></a></li>'
+        tiles.append(
+            f'<li><a class="console__tile" href="services.html#{esc(svc["id"])}">'
+            f'<span class="console__icon">{icon(svc["id"])}</span>'
+            f'<span class="console__text"><strong>{esc(svc["name"])}</strong><span>{esc(svc["short"])}</span></span>'
+            f'<span class="console__state"><i aria-hidden="true"></i>En service</span></a></li>'
         )
-    return "\n".join(items)
+    return "\n".join(tiles)
 
 
 def gen_marquee(ctx: dict) -> str:
@@ -524,7 +525,7 @@ GENERATORS: dict[str, Generator] = {
     "preview_fonts": gen_preview_fonts,
     "wordmark": gen_wordmark,
     "brand_line": gen_brand_line,
-    "hub_nodes": gen_hub_nodes,
+    "console": gen_console,
     "marquee": gen_marquee,
     "page_styles": gen_page_styles,
     "offers_gallery": gen_offers_gallery,
