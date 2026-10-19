@@ -1,0 +1,22 @@
+<footer class="site-footer">
+    <div class="site-footer__inner">
+      <div class="site-footer__id">
+        <p class="brand__name">{{ site.name }}</p>
+        <p>Informatique, réseau, téléphonie et sécurité pour les professionnels et les particuliers de la région lyonnaise.</p>
+      </div>
+      <address class="site-footer__contact">
+        {{ site.contact.street }}<br>
+        {{ site.contact.postcode }} {{ site.contact.city }}<br>
+        <a href="tel:{{ site.contact.phone_link }}">{{ site.contact.phone_display }}</a><br>
+        <a href="mailto:{{ site.contact.email }}">{{ site.contact.email }}</a>
+      </address>
+      <nav class="site-footer__links" aria-label="Informations légales">
+        <ul>
+          <li><a href="mentions-legales.html">Mentions légales</a></li>
+          <li><a href="confidentialite.html">Confidentialité</a></li>
+          <li><a href="{{ site.contact.pagesjaunes_url }}" rel="noopener">Notre fiche PagesJaunes</a></li>
+        </ul>
+      </nav>
+    </div>
+    <p class="site-footer__legal">© {{ build.year }} {{ site.name }}</p>
+  </footer>

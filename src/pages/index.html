@@ -1,0 +1,117 @@
+<!--meta {
+  "title": "Dépannage informatique, réseau et sécurité à Irigny (69)",
+  "description": "Dépannage de PC, réseau et Wi-Fi, serveurs NAS, vidéosurveillance, alarme et téléphonie IP à Irigny et dans la région lyonnaise. Pour les professionnels et les particuliers."
+} -->
+<section class="hero" aria-labelledby="hero-title">
+  <div class="hero__inner">
+    <div class="hero__text">
+      <h1 id="hero-title">Dépannage informatique, réseau et sécurité à Irigny et dans le sud lyonnais.</h1>
+      <p class="hero__lead">Réparation d'ordinateurs, réseau et Wi-Fi, serveurs NAS, vidéosurveillance, alarme et téléphonie IP. Pour les professionnels comme pour les particuliers, sur place ou à distance.</p>
+      <div class="hero__actions">
+        <a class="btn btn--primary" href="diagnostic.html">Lancer le diagnostic</a>
+        <a class="btn btn--ghost" href="tel:{{ site.contact.phone_link }}">Appeler le {{ site.contact.phone_display }}</a>
+      </div>
+    </div>
+    <div class="panel" data-panel>
+      <p class="panel__label" id="panel-label">Nos services, branchés sur vos besoins</p>
+      <div class="panel__rack">
+        <span class="panel__screw" aria-hidden="true"></span>
+        <ul class="panel__ports" aria-labelledby="panel-label">
+{{@ hero_ports }}
+        </ul>
+        <span class="panel__screw" aria-hidden="true"></span>
+      </div>
+      <svg class="panel__cables" aria-hidden="true" focusable="false" data-cables></svg>
+    </div>
+  </div>
+</section>
+
+<section class="section symptoms" aria-labelledby="symptoms-title">
+  <div class="wrap">
+    <h2 id="symptoms-title">Un problème en ce moment ?</h2>
+    <p class="section__lead">Répondez à deux ou trois questions : le diagnostic vous indique la prestation adaptée, son prix et ce que vous pouvez faire tout de suite.</p>
+    <ul class="symptoms__list">
+      <li><a class="symptom" href="diagnostic.html?start=lent">
+        <svg class="symptom__icon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><circle cx="16" cy="17" r="11"/><path d="M16 17V10M16 17l-5 3M12 3h8"/></svg>
+        <span>Mon ordinateur est lent</span></a></li>
+      <li><a class="symptom" href="diagnostic.html?start=internet">
+        <svg class="symptom__icon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M4 12a17 17 0 0 1 24 0M8.5 16.5a11 11 0 0 1 15 0M13 21a4.5 4.5 0 0 1 6 0"/><path d="M5 5l22 22"/></svg>
+        <span>Je n'ai plus internet</span></a></li>
+      <li><a class="symptom" href="diagnostic.html?start=demarrage">
+        <svg class="symptom__icon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M16 4v11M10 7.5a11 11 0 1 0 12 0"/></svg>
+        <span>Mon ordinateur ne démarre plus</span></a></li>
+      <li><a class="symptom" href="diagnostic.html?start=virus">
+        <svg class="symptom__icon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M16 3l11 4v8c0 7-4.7 12-11 14-6.3-2-11-7-11-14V7z"/><path d="M16 10v7M16 21v1"/></svg>
+        <span>Virus ou message suspect</span></a></li>
+    </ul>
+    <p class="symptoms__more"><a href="diagnostic.html">Autre situation : lancer le diagnostic complet</a></p>
+  </div>
+</section>
+
+<section class="section services" aria-labelledby="services-title">
+  <div class="wrap">
+    <h2 id="services-title">Nos services</h2>
+    <p class="section__lead">Une seule équipe pour votre informatique, votre réseau, votre téléphonie et la sécurité de vos locaux.</p>
+    <ul class="svc-list">
+{{@ services_rows }}
+    </ul>
+  </div>
+</section>
+
+<section class="section method" aria-labelledby="method-title">
+  <div class="wrap">
+    <h2 id="method-title">Comment nous travaillons</h2>
+    <p class="section__lead">Des devis clairs, des interventions documentées et un interlocuteur qui connaît votre installation.</p>
+    <ol class="steps">
+      <li class="step">
+        <h3>Étude</h3>
+        <p>Nous analysons votre environnement et vos contraintes avant de proposer une solution.</p>
+      </li>
+      <li class="step">
+        <h3>Installation</h3>
+        <p>Nous installons et configurons le matériel selon vos besoins réels, pas une offre standard.</p>
+      </li>
+      <li class="step">
+        <h3>Maintenance</h3>
+        <p>Nous entretenons vos équipements pour anticiper les pannes plutôt que les subir.</p>
+      </li>
+      <li class="step">
+        <h3>Assistance</h3>
+        <p>En cas de problème, nous intervenons rapidement, sur site ou à distance.</p>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<section class="section quote" aria-labelledby="quote-title">
+  <div class="wrap">
+    <h2 id="quote-title" class="sr-only">Avis client</h2>
+    <figure class="quote__figure">
+      <blockquote><p>{{ site.testimonial.quote }}</p></blockquote>
+      <figcaption>{{ site.testimonial.author }}, {{ site.testimonial.source }}</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="section contact" id="contact" aria-labelledby="contact-title">
+  <div class="wrap contact__grid">
+    <div>
+      <h2 id="contact-title">Nous contacter</h2>
+      <p class="section__lead">Basés à Irigny, nous intervenons dans toute la région lyonnaise, pour les professionnels comme pour les particuliers.</p>
+    </div>
+    <ul class="contact__list">
+      <li>
+        <span class="contact__kind">Téléphone</span>
+        <a class="contact__value" href="tel:{{ site.contact.phone_link }}">{{ site.contact.phone_display }}</a>
+      </li>
+      <li>
+        <span class="contact__kind">E-mail</span>
+        <a class="contact__value" href="mailto:{{ site.contact.email }}">{{ site.contact.email }}</a>
+      </li>
+      <li>
+        <span class="contact__kind">Adresse</span>
+        <a class="contact__value" href="{{ site.contact.map_url }}" rel="noopener">{{ site.contact.street }}, {{ site.contact.postcode }} {{ site.contact.city }}</a>
+      </li>
+    </ul>
+  </div>
+</section>

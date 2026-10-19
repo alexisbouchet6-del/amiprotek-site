@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="{{ site.lang }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  {{@ base_tag }}
+  <title>{{ page.title }} | {{ site.name }}</title>
+  <meta name="description" content="{{ page.description }}">
+  {{@ robots_meta }}
+  <link rel="canonical" href="{{ page.url }}">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="fr_FR">
+  <meta property="og:site_name" content="{{ site.name }}">
+  <meta property="og:title" content="{{ page.title }} | {{ site.name }}">
+  <meta property="og:description" content="{{ page.description }}">
+  <meta property="og:url" content="{{ page.url }}">
+  <meta name="theme-color" content="#13212f">
+  <meta name="format-detection" content="telephone=no">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  {{@ font_preload }}
+  {{@ preview_fonts }}
+  <link rel="stylesheet" href="assets/css/main.css">
+  {{@ jsonld }}
+  <script src="assets/js/main.js" defer></script>
+</head>
+<body class="page-{{ page.slug }}">
+  <a class="skip-link" href="#contenu">Aller au contenu</a>
+  {{> header }}
+  <main id="contenu" tabindex="-1">
+{{@ content }}
+  </main>
+  {{> footer }}
+</body>
+</html>

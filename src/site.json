@@ -1,0 +1,333 @@
+{
+  "name": "AMIPROTEK",
+  "url": "https://www.amiprotek.fr",
+  "lang": "fr",
+  "tagline": "Dépannage informatique, réseau et sécurité à Irigny",
+  "contact": {
+    "phone_display": "04 82 53 24 47",
+    "phone_link": "+33482532447",
+    "email": "info@ami-tech.fr",
+    "street": "30 rue du Vieux Port",
+    "postcode": "69540",
+    "city": "Irigny",
+    "map_url": "https://www.openstreetmap.org/search?query=30%20rue%20du%20Vieux%20Port%2069540%20Irigny",
+    "pagesjaunes_url": "https://www.pagesjaunes.fr/pros/53415754"
+  },
+  "prices_note": "Prix TTC pour les particuliers, HT pour les professionnels.",
+  "legal": {
+    "raison_sociale": "AMIPROTEK",
+    "forme_juridique": "Société par actions simplifiée (SAS)",
+    "capital": "",
+    "siege": "30 rue du Vieux Port, 69540 Irigny",
+    "siren": "817 637 390",
+    "rcs": "RCS Lyon 817 637 390",
+    "tva": "FR44 817 637 390",
+    "directeur_publication": "Hélène Kolossov, présidente",
+    "conception": "Alexis Bouchet",
+    "hebergeur_nom": "Cloudflare, Inc.",
+    "hebergeur_adresse": "101 Townsend Street, San Francisco, CA 94107, États-Unis",
+    "hebergeur_contact": "www.cloudflare.com"
+  },
+  "services": [
+    {
+      "id": "reseau",
+      "name": "Infrastructure réseau",
+      "port": "Réseau",
+      "color": "blue",
+      "short": "Câblage, Wi-Fi et interconnexion de sites, conçus après une étude de vos locaux.",
+      "intro": "Nous concevons, installons et sécurisons le réseau de votre entreprise. Chaque projet commence par une étude de vos locaux et de vos usages, pour un réseau fiable aujourd'hui et capable d'évoluer demain.",
+      "points": [
+        "Étude préalable de vos besoins et de vos locaux",
+        "Câblage réseau",
+        "Wi-Fi couvrant l'ensemble de vos espaces",
+        "Interconnexion de plusieurs sites",
+        "Sécurisation du réseau"
+      ],
+      "audience": "PME, artisans, collectivités et particuliers exigeants.",
+      "brands": ""
+    },
+    {
+      "id": "nas",
+      "name": "Serveur NAS",
+      "port": "Stockage NAS",
+      "color": "yellow",
+      "short": "Vos fichiers et sauvegardes au même endroit, partagés et accessibles à distance.",
+      "intro": "Un serveur NAS regroupe vos fichiers, documents, sauvegardes et contenus multimédias sur un seul équipement. Vos collaborateurs y accèdent en toute sécurité, au bureau comme à distance.",
+      "points": [
+        "Étude de votre infrastructure pour choisir la bonne configuration",
+        "Partage de fichiers entre plusieurs utilisateurs",
+        "Accès sécurisé à distance",
+        "Sauvegarde automatique",
+        "Cloud hybride et synchronisation des données"
+      ],
+      "audience": "Entreprises qui veulent centraliser et protéger leurs données.",
+      "brands": ""
+    },
+    {
+      "id": "videosurveillance",
+      "name": "Vidéosurveillance et alarme",
+      "port": "Vidéo et alarme",
+      "color": "red",
+      "short": "Caméras consultables à distance et alarmes anti-intrusion reliées à votre smartphone.",
+      "intro": "Nous installons des caméras et des alarmes pour protéger vos locaux. Vous consultez les images en direct ou les enregistrements depuis votre téléphone, et vous êtes alerté immédiatement en cas d'intrusion.",
+      "points": [
+        "Caméras avec visionnage en temps réel",
+        "Enregistrement et consultation des vidéos à distance",
+        "Alarme avec détection d'intrusion",
+        "Alertes automatiques sur votre smartphone",
+        "Raccordement possible à un service de télésurveillance"
+      ],
+      "audience": "Bureaux, entrepôts, commerces et domiciles.",
+      "brands": "Dahua et Ezviz pour la vidéo, Ajax et Paradox pour l'alarme."
+    },
+    {
+      "id": "maintenance",
+      "name": "Maintenance informatique",
+      "port": "Maintenance",
+      "color": "green",
+      "short": "Dépannage et entretien de vos ordinateurs, serveurs et imprimantes, sur site ou à distance.",
+      "intro": "Nous entretenons et dépannons vos équipements avant que la panne ne bloque votre activité. Nous intervenons sur place à Irigny et dans la région lyonnaise, ou à distance quand c'est possible.",
+      "points": [
+        "Ordinateurs, serveurs, réseaux, imprimantes et périphériques",
+        "Maintenance préventive pour anticiper les pannes",
+        "Dépannage matériel et logiciel",
+        "Suppression de virus et traitement des lenteurs",
+        "Récupération de données"
+      ],
+      "audience": "Professionnels et particuliers.",
+      "brands": ""
+    },
+    {
+      "id": "telephonie",
+      "name": "Internet et téléphonie",
+      "port": "Internet et téléphonie",
+      "color": "orange",
+      "short": "Une connexion adaptée à votre activité et une téléphonie IP configurée pour votre équipe.",
+      "intro": "Nous sélectionnons l'offre internet adaptée à vos usages, du télétravail à l'hébergement de serveurs. Pour les professionnels, nous installons et gérons votre téléphonie IP.",
+      "points": [
+        "Sélection d'une offre internet adaptée",
+        "Installation de téléphonie IP",
+        "Configuration des postes, extensions et messageries",
+        "Transfert d'appels et files d'attente"
+      ],
+      "audience": "Particuliers et entreprises.",
+      "brands": ""
+    },
+    {
+      "id": "securite",
+      "name": "Sécurité des données",
+      "port": "Sécurité des données",
+      "color": "purple",
+      "short": "Sauvegardes, protection du réseau et prévention des attaques informatiques.",
+      "intro": "Nous protégeons vos données sensibles et votre réseau contre les attaques. Sauvegardes, règles de sécurité et contrôles sont adaptés à la taille de votre structure.",
+      "points": [
+        "Protection des données sensibles",
+        "Sécurisation du réseau",
+        "Mise en place de sauvegardes",
+        "Prévention des attaques et des rançongiciels",
+        "Règles de sécurité adaptées à votre activité"
+      ],
+      "audience": "Entreprises et indépendants.",
+      "brands": ""
+    }
+  ],
+  "tarifs": [
+    {
+      "id": "domicile",
+      "title": "Intervention à domicile ou sur site",
+      "items": [
+        {
+          "id": "dom_heure",
+          "name": "Tarif horaire",
+          "pro": "75 €",
+          "part": "75 €"
+        },
+        {
+          "id": "dom_moins_1h",
+          "name": "Devis de réparation ou intervention de moins d'une heure",
+          "pro": "50 €",
+          "part": "50 €"
+        },
+        {
+          "id": "dep_irigny",
+          "name": "Déplacement à Irigny",
+          "pro": "Gratuit",
+          "part": "Gratuit"
+        },
+        {
+          "id": "dep_proche",
+          "name": "Déplacement dans les communes autour d'Irigny",
+          "pro": "15 €",
+          "part": "15 €"
+        },
+        {
+          "id": "dep_autres",
+          "name": "Déplacement dans les autres communes",
+          "pro": "30 €",
+          "part": "30 €"
+        }
+      ],
+      "note": "Si votre matériel doit être rapporté dans nos locaux, le forfait à domicile ne s'applique plus : vous ne réglez que les frais de déplacement."
+    },
+    {
+      "id": "pc-bureau",
+      "title": "PC de bureau",
+      "items": [
+        {
+          "id": "montage_piece",
+          "name": "Montage d'une pièce détachée (hors boîtier, ventilateur et carte mère)",
+          "pro": "29 €",
+          "part": "29 €"
+        },
+        {
+          "id": "depoussierage",
+          "name": "Dépoussiérage intérieur",
+          "pro": "12 €",
+          "part": "12 €"
+        },
+        {
+          "id": "virus_nettoyage",
+          "name": "Éradication de virus, nettoyage, optimisation et mises à jour",
+          "pro": "95 €",
+          "part": "95 €"
+        },
+        {
+          "id": "windows",
+          "name": "Installation ou réinstallation de Windows, avec licence et pilotes fournis",
+          "pro": "110 €",
+          "part": "110 €"
+        },
+        {
+          "id": "ssd",
+          "name": "Remplacement du disque dur par un SSD, avec clonage",
+          "pro": "200 €",
+          "part": "200 €"
+        }
+      ]
+    },
+    {
+      "id": "pc-portable",
+      "title": "PC portable",
+      "items": [
+        {
+          "id": "portable_disque_ram",
+          "name": "Montage d'un disque ou de mémoire RAM, avec test de compatibilité",
+          "pro": "35 €",
+          "part": "35 €"
+        },
+        {
+          "id": "portable_clavier_dalle",
+          "name": "Remplacement du clavier ou de l'écran (dalle)",
+          "pro": "55 €",
+          "part": "55 €"
+        },
+        {
+          "id": "portable_entretien",
+          "name": "Entretien complet : démontage, dépoussiérage et pâte thermique",
+          "pro": "89 €",
+          "part": "89 €"
+        }
+      ]
+    },
+    {
+      "id": "atelier",
+      "title": "Tarif horaire en atelier",
+      "items": [
+        {
+          "id": "atelier_15",
+          "name": "15 minutes, intervention express",
+          "pro": "30 €",
+          "part": "30 €"
+        },
+        {
+          "id": "atelier_30",
+          "name": "30 minutes, ou prise en charge de matériel",
+          "pro": "45 €",
+          "part": "45 €"
+        },
+        {
+          "id": "atelier_60",
+          "name": "1 heure",
+          "pro": "75 €",
+          "part": "75 €"
+        }
+      ]
+    },
+    {
+      "id": "devis",
+      "title": "Devis de réparation",
+      "items": [
+        {
+          "id": "devis_panne",
+          "name": "Panne matérielle",
+          "pro": "30 €",
+          "part": "30 €"
+        },
+        {
+          "id": "devis_electrique",
+          "name": "Dégâts électriques, avec détail de la panne pour votre assurance",
+          "pro": "89 €",
+          "part": "89 €"
+        },
+        {
+          "id": "devis_piece",
+          "name": "Test d'une pièce hors garantie",
+          "pro": "25 €",
+          "part": "25 €"
+        },
+        {
+          "id": "devis_fabricant",
+          "name": "Prise en charge d'un retour fabricant",
+          "pro": "30 €",
+          "part": "30 €"
+        }
+      ]
+    },
+    {
+      "id": "donnees",
+      "title": "Récupération de données",
+      "items": [
+        {
+          "id": "data_moins_10",
+          "name": "Moins de 10 Go, ou avec réinstallation de Windows",
+          "pro": "49 €",
+          "part": "49 €"
+        },
+        {
+          "id": "data_plus_10",
+          "name": "Plus de 10 Go",
+          "pro": "59 €",
+          "part": "59 €"
+        },
+        {
+          "id": "data_logiciel",
+          "name": "Récupération logicielle sur un disque défectueux",
+          "pro": "75 €",
+          "part": "70 €"
+        },
+        {
+          "id": "data_avance",
+          "name": "Récupération avancée sur un disque défectueux",
+          "pro": "109 €",
+          "part": "109 €"
+        },
+        {
+          "id": "data_illisible",
+          "name": "Disque défectueux et illisible",
+          "pro": "Sur devis",
+          "part": "Sur devis"
+        }
+      ]
+    }
+  ],
+  "testimonial": {
+    "quote": "Bon conseil et efficacité des interventions, travail propre et soigné, contact très agréable, facilement joignable et ponctuel, on recommande vivement.",
+    "author": "Jacquelin Morel",
+    "source": "Avis Google"
+  },
+  "conditions": [
+    "Nous ne modifions pas le matériel (tuning, watercooling…) et ne réalisons aucune opération qui mettrait fin à la garantie des produits.",
+    "Nous n'assurons pas la sauvegarde de vos données et déclinons toute responsabilité en cas de perte lors d'une intervention. Vos données restent votre propriété exclusive. Un disque dur est un support de stockage, pas une sauvegarde : effectuez une sauvegarde avant toute prise en charge.",
+    "Le matériel est testé selon les conditions standard définies par les constructeurs."
+  ]
+}

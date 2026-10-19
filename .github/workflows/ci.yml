@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Moindre privilège : le workflow ne fait que lire le dépôt.
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0 # historique complet, nécessaire à gitleaks
+
+      - name: Recherche de secrets (gitleaks)
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Lint (ruff)
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install ruff
+          ruff check tools tests
+
+      - name: Tests
+        run: python -m unittest discover -s tests -v
+
+      - name: Build
+        run: python tools/build.py
+
+      - name: Archive du site généré
+        uses: actions/upload-artifact@v7
+        with:
+          name: dist
+          path: dist/
+          retention-days: 7

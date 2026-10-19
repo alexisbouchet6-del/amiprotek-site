@@ -1,0 +1,24 @@
+# Site généré : reconstruit à chaque déploiement, jamais versionné.
+dist/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.ruff_cache/
+
+# Secrets et configuration locale (ne jamais pousser)
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Éditeurs et systèmes
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+desktop.ini

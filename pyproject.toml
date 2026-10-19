@@ -1,0 +1,18 @@
+[project]
+name = "amiprotek-site"
+version = "1.0.0"
+description = "Site vitrine statique d'AMIPROTEK (Irigny)"
+requires-python = ">=3.10"
+dependencies = []
+
+[tool.ruff]
+line-length = 110
+target-version = "py310"
+
+[tool.ruff.lint]
+# E/W : style PEP 8, F : erreurs, B : bugs probables, I : imports,
+# UP : syntaxe moderne, S : règles de sécurité (bandit).
+select = ["E", "F", "W", "B", "I", "UP", "S"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S101"]

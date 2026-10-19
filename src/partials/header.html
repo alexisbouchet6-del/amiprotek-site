@@ -1,0 +1,20 @@
+<header class="site-header">
+    <div class="site-header__inner">
+      <a class="brand" href="index.html" aria-label="{{ site.name }}, accueil">
+        <span class="brand__mark" aria-hidden="true"><span></span><span></span><span></span></span>
+        <span class="brand__name">{{ site.name }}</span>
+      </a>
+      <nav class="site-nav" aria-label="Navigation principale">
+        <ul>
+          <li><a href="services.html" data-nav="services">Services</a></li>
+          <li><a href="diagnostic.html" data-nav="diagnostic">Diagnostic</a></li>
+          <li><a href="tarifs.html" data-nav="tarifs">Tarifs</a></li>
+          <li><a href="index.html#contact" data-nav="contact">Contact</a></li>
+        </ul>
+      </nav>
+      <a class="header-call" href="tel:{{ site.contact.phone_link }}">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z"/></svg>
+        <span class="header-call__label">{{ site.contact.phone_display }}</span>
+      </a>
+    </div>
+  </header>

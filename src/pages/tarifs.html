@@ -1,0 +1,32 @@
+<!--meta {
+  "title": "Tarifs 2026 : dépannage informatique à Irigny et à domicile",
+  "description": "Tarifs 2026 : intervention à domicile, PC de bureau et portable, tarif horaire, devis de réparation et récupération de données. Prix TTC pour les particuliers, HT pour les professionnels.",
+  "nav": "tarifs"
+} -->
+<section class="page-head" aria-labelledby="page-title">
+  <div class="wrap">
+    <h1 id="page-title">Tarifs 2026</h1>
+    <p class="section__lead">Les interventions courantes ont un prix fixe. Les projets de réseau, de stockage, de téléphonie et de sécurité font l'objet d'un devis après étude.</p>
+    {{@ tarifs_toc }}
+  </div>
+</section>
+
+<div class="section section--tight">
+  <div class="wrap tarifs-stack">
+    {{@ prices_note }}
+{{@ tarifs_tables }}
+    <section class="tarif-group" aria-labelledby="conditions-title">
+      <h2 id="conditions-title">Conditions d'intervention</h2>
+      {{@ conditions }}
+      <p class="note">Infrastructure réseau, serveurs NAS, vidéosurveillance, alarme, internet et téléphonie : <a href="mailto:{{ site.contact.email }}?subject=Demande%20de%20devis">demandez un devis</a> ou appelez le <a href="tel:{{ site.contact.phone_link }}">{{ site.contact.phone_display }}</a>.</p>
+    </section>
+  </div>
+</div>
+
+<section class="section cta-band" aria-labelledby="cta-title">
+  <div class="wrap cta-band__inner">
+    <h2 id="cta-title">Quelle prestation vous faut-il ?</h2>
+    <p>Décrivez votre problème en quelques clics, le diagnostic vous indique la bonne prestation.</p>
+    <a class="btn btn--primary" href="diagnostic.html">Lancer le diagnostic</a>
+  </div>
+</section>

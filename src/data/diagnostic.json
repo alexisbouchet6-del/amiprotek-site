@@ -1,0 +1,451 @@
+{
+  "start": "start",
+  "shortcuts": {
+    "lent": "slow_age",
+    "internet": "net_scope",
+    "demarrage": "r_noboot",
+    "virus": "virus_type"
+  },
+  "nodes": {
+    "start": {
+      "type": "question",
+      "title": "Quel est votre problème ?",
+      "help": "Choisissez ce qui ressemble le plus à votre situation.",
+      "options": [
+        {
+          "label": "Mon ordinateur est lent",
+          "next": "slow_age"
+        },
+        {
+          "label": "Je n'ai plus internet",
+          "next": "net_scope"
+        },
+        {
+          "label": "Mon ordinateur ne démarre plus",
+          "next": "r_noboot"
+        },
+        {
+          "label": "Virus, publicités ou message suspect",
+          "next": "virus_type"
+        },
+        {
+          "label": "J'ai perdu des fichiers",
+          "next": "r_data"
+        },
+        {
+          "label": "Je veux protéger mes locaux",
+          "next": "r_site_security"
+        },
+        {
+          "label": "J'équipe mon entreprise",
+          "next": "business_need"
+        }
+      ]
+    },
+    "slow_age": {
+      "type": "question",
+      "title": "Votre ordinateur a-t-il plus de 5 ans ?",
+      "help": "Un ordinateur ancien est souvent ralenti par son disque dur, pas par son processeur.",
+      "options": [
+        {
+          "label": "Oui, plus de 5 ans",
+          "next": "slow_boot"
+        },
+        {
+          "label": "Non, moins de 5 ans",
+          "next": "slow_heat"
+        },
+        {
+          "label": "Je ne sais pas",
+          "next": "r_slow_unknown"
+        }
+      ]
+    },
+    "slow_boot": {
+      "type": "question",
+      "title": "Met-il plus d'une minute à démarrer ?",
+      "help": "Comptez entre l'appui sur le bouton et le moment où vous pouvez ouvrir un logiciel.",
+      "options": [
+        {
+          "label": "Oui, plus d'une minute",
+          "next": "r_ssd"
+        },
+        {
+          "label": "Non, il démarre vite",
+          "next": "slow_heat"
+        }
+      ]
+    },
+    "net_scope": {
+      "type": "question",
+      "title": "La panne touche-t-elle tous vos appareils ?",
+      "help": "Vérifiez avec un téléphone connecté au Wi-Fi, pas en 4G ou 5G.",
+      "options": [
+        {
+          "label": "Un seul appareil",
+          "next": "r_net_single"
+        },
+        {
+          "label": "Tous les appareils",
+          "next": "net_box"
+        }
+      ]
+    },
+    "net_box": {
+      "type": "question",
+      "title": "Avez-vous redémarré votre box ?",
+      "help": "Débranchez-la 30 secondes, rebranchez-la, puis attendez 5 minutes.",
+      "options": [
+        {
+          "label": "Oui, et rien n'a changé",
+          "next": "net_profile"
+        },
+        {
+          "label": "Non, pas encore",
+          "next": "r_net_reboot"
+        }
+      ]
+    },
+    "net_profile": {
+      "type": "question",
+      "title": "Vous êtes un particulier ou un professionnel ?",
+      "options": [
+        {
+          "label": "Particulier",
+          "next": "r_net_home"
+        },
+        {
+          "label": "Professionnel",
+          "next": "r_net_pro"
+        }
+      ]
+    },
+    "virus_type": {
+      "type": "question",
+      "title": "Que constatez-vous ?",
+      "options": [
+        {
+          "label": "Des publicités ou des fenêtres qui s'ouvrent seules",
+          "next": "r_adware"
+        },
+        {
+          "label": "Mes fichiers sont illisibles et on me demande une rançon",
+          "next": "r_ransom"
+        },
+        {
+          "label": "Un message ou un appel de faux support Microsoft",
+          "next": "r_scam"
+        },
+        {
+          "label": "Le système est instable, je veux repartir de zéro",
+          "next": "r_reinstall"
+        }
+      ]
+    },
+    "business_need": {
+      "type": "question",
+      "title": "De quoi avez-vous besoin ?",
+      "options": [
+        {
+          "label": "Réseau, Wi-Fi ou câblage",
+          "next": "r_network"
+        },
+        {
+          "label": "Stockage partagé et sauvegardes",
+          "next": "r_nas"
+        },
+        {
+          "label": "Internet ou téléphonie",
+          "next": "r_telecom"
+        },
+        {
+          "label": "Entretien de mon parc informatique",
+          "next": "r_maintenance"
+        },
+        {
+          "label": "Protection contre les cyberattaques",
+          "next": "r_security_pro"
+        }
+      ]
+    },
+    "r_ssd": {
+      "type": "result",
+      "title": "Votre disque dur ralentit l'ordinateur",
+      "summary": "Un ordinateur de plus de 5 ans qui démarre en plus d'une minute fonctionne presque toujours avec un disque dur mécanique. Le remplacer par un SSD divise les temps de démarrage et d'ouverture des logiciels, sans réinstaller : vos fichiers et vos logiciels sont copiés à l'identique.",
+      "tarifs": [
+        "ssd"
+      ],
+      "service": "maintenance",
+      "tips": [
+        "Sauvegardez vos documents importants sur une clé USB ou un disque externe avant l'intervention.",
+        "Notez vos mots de passe principaux (messagerie, banque) au cas où."
+      ]
+    },
+    "r_cleanup": {
+      "type": "result",
+      "title": "Un nettoyage du système devrait suffire",
+      "summary": "Sur un ordinateur récent, la lenteur vient le plus souvent de logiciels qui se lancent au démarrage, de mises à jour bloquées ou d'un disque presque plein. Un nettoyage et une optimisation remettent le système en ordre.",
+      "tarifs": [
+        "virus_nettoyage"
+      ],
+      "service": "maintenance",
+      "tips": [
+        "Redémarrez complètement l'ordinateur (Démarrer, Marche/Arrêt, Redémarrer) : un arrêt simple ne suffit pas toujours.",
+        "Vérifiez qu'il reste au moins 15 % d'espace libre sur le disque."
+      ]
+    },
+    "r_slow_unknown": {
+      "type": "result",
+      "title": "Un devis de réparation permettra de trouver la cause",
+      "summary": "Sans connaître l'âge de l'ordinateur, la cause peut être matérielle (disque dur fatigué) ou logicielle (système encombré). Le devis de réparation identifie le problème et vous indique exactement ce qu'il faut faire, avant toute dépense supplémentaire.",
+      "tarifs": [
+        "devis_panne"
+      ],
+      "service": "maintenance",
+      "tips": [
+        "Notez quand la lenteur apparaît : au démarrage, sur internet, avec un logiciel précis.",
+        "Gardez la boîte ou la facture de l'ordinateur si vous l'avez : elle indique sa date d'achat."
+      ]
+    },
+    "r_noboot": {
+      "type": "result",
+      "title": "Un devis de réparation est nécessaire",
+      "summary": "Un ordinateur qui ne démarre plus peut avoir un problème d'alimentation, de disque, de mémoire ou de système. Le devis de réparation détermine la panne et son coût avant toute intervention. Si la panne fait suite à un orage ou à une surtension, nous établissons un détail de panne destiné à votre assurance.",
+      "tarifs": [
+        "devis_panne",
+        "devis_electrique"
+      ],
+      "service": "maintenance",
+      "tips": [
+        "N'enchaînez pas les tentatives de démarrage si vous entendez un bruit inhabituel venant du disque : cela peut aggraver la perte de données.",
+        "Pour un portable, essayez avec le chargeur branché et notez si un voyant s'allume.",
+        "Après un orage, conservez l'ordinateur en l'état et prévenez votre assureur."
+      ]
+    },
+    "r_net_single": {
+      "type": "result",
+      "title": "Le problème vient de cet appareil",
+      "summary": "Si les autres appareils accèdent à internet, la box fonctionne. La panne vient de la configuration réseau de cet appareil, de sa carte Wi-Fi ou d'un logiciel qui bloque la connexion. Une intervention courte en atelier suffit le plus souvent.",
+      "tarifs": [
+        "atelier_30"
+      ],
+      "service": "maintenance",
+      "tips": [
+        "Désactivez puis réactivez le Wi-Fi de l'appareil.",
+        "Supprimez le réseau Wi-Fi enregistré et reconnectez-vous avec la clé inscrite sous la box."
+      ]
+    },
+    "r_net_reboot": {
+      "type": "result",
+      "title": "Commencez par redémarrer votre box",
+      "summary": "Le redémarrage de la box résout une grande partie des coupures. Si internet ne revient pas après 5 minutes, consultez la page d'incidents de votre opérateur : la panne peut venir de son réseau. Si tout est normal de son côté, appelez-nous.",
+      "tarifs": [],
+      "service": "telephonie",
+      "tips": [
+        "Débranchez la box 30 secondes, rebranchez-la, puis attendez que les voyants soient stables.",
+        "Vérifiez que le câble de la prise téléphonique ou de la fibre est bien enfoncé."
+      ]
+    },
+    "r_net_home": {
+      "type": "result",
+      "title": "Votre installation doit être vérifiée",
+      "summary": "La box a été redémarrée et aucun appareil ne se connecte. Contactez d'abord votre opérateur pour écarter une panne sur son réseau. Si la ligne fonctionne, nous venons vérifier votre installation : box, câblage et Wi-Fi. Les frais de déplacement dépendent de votre commune.",
+      "tarifs": [
+        "dom_moins_1h",
+        "dom_heure"
+      ],
+      "service": "telephonie",
+      "tips": [
+        "Préparez votre identifiant client opérateur avant d'appeler.",
+        "Notez la couleur et l'état des voyants de la box."
+      ]
+    },
+    "r_net_pro": {
+      "type": "result",
+      "title": "Votre connexion professionnelle doit être fiabilisée",
+      "summary": "Une coupure arrête votre activité. Nous identifions la cause (ligne, box, équipements réseau) et, si votre offre actuelle ne suffit plus, nous vous proposons une connexion adaptée à votre activité.",
+      "tarifs": [],
+      "service": "telephonie",
+      "tips": [
+        "Signalez la panne à votre opérateur et notez le numéro de ticket.",
+        "Notez depuis quand la coupure dure et si elle se répète."
+      ]
+    },
+    "r_adware": {
+      "type": "result",
+      "title": "Votre ordinateur doit être désinfecté",
+      "summary": "Des publicités qui s'ouvrent seules ou un navigateur modifié indiquent un logiciel indésirable. Nous l'éradiquons, nettoyons et optimisons le système, puis installons les mises à jour.",
+      "tarifs": [
+        "virus_nettoyage"
+      ],
+      "service": "securite",
+      "tips": [
+        "Ne cliquez sur aucune fenêtre qui vous demande d'installer un logiciel ou d'appeler un numéro.",
+        "Évitez de saisir des mots de passe ou des coordonnées bancaires sur cet ordinateur en attendant."
+      ]
+    },
+    "r_ransom": {
+      "type": "result",
+      "urgent": true,
+      "title": "Attaque par rançongiciel : agissez maintenant",
+      "summary": "Vos fichiers ont été chiffrés par un logiciel malveillant. Isolez immédiatement l'ordinateur pour éviter la propagation, puis appelez-nous. Ne payez pas la rançon : rien ne garantit la récupération de vos données.",
+      "tarifs": [],
+      "service": "securite",
+      "tips": [
+        "Débranchez le câble réseau et coupez le Wi-Fi de l'ordinateur.",
+        "Ne l'éteignez pas et ne supprimez rien : les traces servent à l'analyse.",
+        "Ne branchez aucune clé USB ni aucun disque de sauvegarde dessus.",
+        "Déposez plainte et faites-vous accompagner sur 17cyber.gouv.fr."
+      ],
+      "link": {
+        "label": "Ouvrir 17cyber.gouv.fr",
+        "url": "https://17cyber.gouv.fr/"
+      }
+    },
+    "r_scam": {
+      "type": "result",
+      "urgent": true,
+      "title": "Arnaque au faux support technique",
+      "summary": "Microsoft n'affiche jamais de numéro de téléphone dans ses messages d'erreur et ne demande jamais de paiement par carte cadeau ou cryptomonnaie. Ne rappelez pas le numéro affiché. Si vous avez laissé quelqu'un prendre le contrôle de votre ordinateur, faites-le vérifier et nettoyer rapidement.",
+      "tarifs": [
+        "virus_nettoyage"
+      ],
+      "service": "securite",
+      "tips": [
+        "Fermez le navigateur. S'il refuse, redémarrez l'ordinateur.",
+        "Si vous avez donné un accès à distance, déconnectez l'ordinateur d'internet.",
+        "Si vous avez payé, prévenez votre banque immédiatement.",
+        "Changez vos mots de passe depuis un autre appareil."
+      ],
+      "link": {
+        "label": "Ouvrir 17cyber.gouv.fr",
+        "url": "https://17cyber.gouv.fr/"
+      }
+    },
+    "r_reinstall": {
+      "type": "result",
+      "title": "Une réinstallation propre de Windows 11",
+      "summary": "Quand le système est trop instable, repartir d'une installation propre est plus rapide et plus fiable que de corriger les problèmes un par un.",
+      "tarifs": [
+        "windows"
+      ],
+      "service": "maintenance",
+      "tips": [
+        "Sauvegardez vos documents, photos et favoris sur un support externe.",
+        "Listez les logiciels que vous utilisez et retrouvez leurs licences."
+      ]
+    },
+    "r_data": {
+      "type": "result",
+      "title": "Arrêtez d'utiliser le disque concerné",
+      "summary": "Chaque nouvelle écriture sur le disque peut effacer définitivement les fichiers perdus. Le prix dépend du volume à récupérer et de l'état du disque : un disque défectueux demande une récupération logicielle ou avancée, et un disque illisible fait l'objet d'un devis.",
+      "tarifs": [
+        "data_moins_10",
+        "data_plus_10",
+        "data_logiciel",
+        "data_avance",
+        "data_illisible"
+      ],
+      "service": "maintenance",
+      "tips": [
+        "N'installez aucun logiciel de récupération sur le disque où se trouvaient les fichiers.",
+        "Si le disque fait un bruit de clic, éteignez l'ordinateur et ne le rallumez plus."
+      ]
+    },
+    "r_site_security": {
+      "type": "result",
+      "title": "Vidéosurveillance et alarme sur mesure",
+      "summary": "Nous étudions vos locaux pour placer les caméras et les détecteurs aux bons endroits, puis nous installons un système consultable depuis votre téléphone. Le devis dépend du nombre de points à couvrir.",
+      "tarifs": [],
+      "service": "videosurveillance",
+      "tips": [
+        "Listez les accès à surveiller : portes, fenêtres, parking, réserve.",
+        "Vérifiez si une prise réseau ou électrique est disponible près des emplacements envisagés."
+      ]
+    },
+    "r_network": {
+      "type": "result",
+      "title": "Étude de votre réseau",
+      "summary": "Nous analysons vos locaux et vos usages, puis nous concevons le câblage, le Wi-Fi et la sécurisation adaptés. Vous recevez un devis détaillé avant toute installation.",
+      "tarifs": [],
+      "service": "reseau",
+      "tips": [
+        "Préparez un plan, même approximatif, de vos locaux.",
+        "Notez le nombre de postes, d'imprimantes et d'appareils connectés."
+      ]
+    },
+    "r_nas": {
+      "type": "result",
+      "title": "Un serveur NAS pour centraliser vos données",
+      "summary": "Un NAS regroupe vos fichiers et vos sauvegardes, les partage entre vos collaborateurs et reste accessible à distance de façon sécurisée. Nous dimensionnons la configuration selon votre volume de données.",
+      "tarifs": [],
+      "service": "nas",
+      "tips": [
+        "Estimez le volume de vos données actuelles (en Go ou To).",
+        "Listez les personnes qui doivent accéder aux fichiers, au bureau et à distance."
+      ]
+    },
+    "r_telecom": {
+      "type": "result",
+      "title": "Internet et téléphonie adaptés à votre activité",
+      "summary": "Nous sélectionnons l'offre internet qui correspond à vos usages et installons votre téléphonie IP : postes, extensions, messageries, transferts d'appels et files d'attente.",
+      "tarifs": [],
+      "service": "telephonie",
+      "tips": [
+        "Munissez-vous de vos dernières factures internet et téléphone.",
+        "Comptez le nombre de postes téléphoniques nécessaires."
+      ]
+    },
+    "r_maintenance": {
+      "type": "result",
+      "title": "Maintenance de votre parc informatique",
+      "summary": "Nous entretenons vos ordinateurs, serveurs, imprimantes et équipements réseau de façon préventive, et nous intervenons sur site ou à distance en cas de panne.",
+      "tarifs": [],
+      "service": "maintenance",
+      "tips": [
+        "Listez vos équipements et leur âge approximatif.",
+        "Notez les pannes qui reviennent le plus souvent."
+      ]
+    },
+    "r_security_pro": {
+      "type": "result",
+      "title": "Protection de vos données et de votre réseau",
+      "summary": "Nous vérifions vos sauvegardes, la sécurité de votre réseau et vos accès, puis nous mettons en place les protections adaptées à votre structure.",
+      "tarifs": [],
+      "service": "securite",
+      "tips": [
+        "Vérifiez quand a eu lieu votre dernière sauvegarde et si vous avez déjà testé sa restauration.",
+        "Listez les personnes qui ont un accès administrateur."
+      ]
+    },
+    "slow_heat": {
+      "type": "question",
+      "title": "L'ordinateur chauffe-t-il ou son ventilateur fait-il beaucoup de bruit ?",
+      "help": "Un ventilateur encrassé fait chauffer le processeur, qui ralentit pour se protéger.",
+      "options": [
+        {
+          "label": "Oui, il chauffe ou il est bruyant",
+          "next": "r_overheat"
+        },
+        {
+          "label": "Non",
+          "next": "r_cleanup"
+        }
+      ]
+    },
+    "r_overheat": {
+      "type": "result",
+      "title": "Votre ordinateur a besoin d'un entretien",
+      "summary": "La poussière bouche les ventilateurs et la pâte thermique sèche avec le temps. Le processeur chauffe et réduit sa vitesse pour se protéger. Sur un portable, l'entretien complet comprend le démontage, le dépoussiérage et le remplacement de la pâte thermique. Sur un PC de bureau, un dépoussiérage intérieur suffit le plus souvent.",
+      "tarifs": [
+        "portable_entretien",
+        "depoussierage"
+      ],
+      "service": "maintenance",
+      "tips": [
+        "Posez le portable sur une surface dure et plane, jamais sur un lit ou un canapé.",
+        "Évitez les travaux lourds (jeux, montage vidéo) tant que l'entretien n'est pas fait."
+      ]
+    }
+  }
+}

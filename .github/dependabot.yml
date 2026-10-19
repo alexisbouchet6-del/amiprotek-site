@@ -1,0 +1,9 @@
+# Met à jour automatiquement les versions des actions GitHub (correctifs de sécurité).
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    commit-message:
+      prefix: "ci"

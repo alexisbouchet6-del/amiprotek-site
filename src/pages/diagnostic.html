@@ -1,0 +1,31 @@
+<!--meta {
+  "title": "Diagnostic en ligne : trouvez la bonne prestation",
+  "description": "PC lent, plus d'internet, virus, ordinateur qui ne démarre plus : répondez à quelques questions pour connaître la prestation adaptée, son prix et les bons réflexes.",
+  "nav": "diagnostic"
+} -->
+<section class="page-head" aria-labelledby="page-title">
+  <div class="wrap">
+    <h1 id="page-title">Diagnostic</h1>
+    <p class="section__lead">Répondez à quelques questions. Vous saurez quelle prestation correspond à votre situation, combien elle coûte et quoi faire en attendant notre intervention.</p>
+  </div>
+</section>
+
+<section class="section section--tight" aria-label="Questionnaire de diagnostic">
+  <div class="wrap diag" data-diagnostic>
+    <div class="diag__main">
+      <div class="diag__progress" aria-hidden="true"><span class="diag__progress-bar" data-progress></span></div>
+      <div class="diag__stage" data-stage aria-live="polite">
+        <noscript>
+          <p class="note">Le diagnostic nécessite JavaScript. Appelez-nous au <a href="tel:{{ site.contact.phone_link }}">{{ site.contact.phone_display }}</a> ou écrivez à <a href="mailto:{{ site.contact.email }}">{{ site.contact.email }}</a>.</p>
+        </noscript>
+      </div>
+    </div>
+    <aside class="diag__trail" aria-labelledby="trail-title" data-trail-box hidden>
+      <h2 id="trail-title">Vos réponses</h2>
+      <ol class="diag__answers" data-trail></ol>
+      <button type="button" class="link-btn" data-restart>Recommencer</button>
+    </aside>
+  </div>
+</section>
+{{@ diagnostic_data }}
+<script src="assets/js/diagnostic.js" defer></script>

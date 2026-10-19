@@ -1,0 +1,29 @@
+<!--meta {
+  "title": "Mentions légales",
+  "description": "Mentions légales du site amiprotek.fr : éditeur, hébergeur, propriété intellectuelle."
+} -->
+<section class="page-head" aria-labelledby="page-title">
+  <div class="wrap">
+    <h1 id="page-title">Mentions légales</h1>
+  </div>
+</section>
+
+<section class="section section--tight prose" aria-label="Contenu des mentions légales">
+  <div class="wrap wrap--text">
+    <h2>Éditeur du site</h2>
+    {{@ legal_editor }}
+    <p>Contact : <a href="tel:{{ site.contact.phone_link }}">{{ site.contact.phone_display }}</a>, <a href="mailto:{{ site.contact.email }}">{{ site.contact.email }}</a>.</p>
+
+    <h2>Hébergement</h2>
+    {{@ legal_host }}
+
+    <h2>Propriété intellectuelle</h2>
+    <p>Les textes, illustrations et éléments graphiques de ce site sont la propriété de {{ site.name }}, sauf mention contraire. Toute reproduction sans autorisation écrite préalable est interdite. Les marques de matériel citées appartiennent à leurs propriétaires respectifs.</p>
+
+    <h2>Responsabilité</h2>
+    <p>Les informations publiées sur ce site sont fournies à titre indicatif. Les conseils affichés par le diagnostic en ligne ne remplacent pas l'examen de votre matériel par un technicien. Les prix indiqués peuvent évoluer ; seul le devis remis avant l'intervention fait foi.</p>
+
+    <h2>Données personnelles</h2>
+    <p>Le traitement de vos données est décrit dans la <a href="confidentialite.html">politique de confidentialité</a>.</p>
+  </div>
+</section>
