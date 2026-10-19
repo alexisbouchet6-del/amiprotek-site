@@ -460,12 +460,21 @@ def gen_content(ctx: dict) -> str:
 
 
 def gen_base_tag(ctx: dict) -> str:
+    """Base de la page 404 : la racine du site, ou un sous-dossier (GitHub Pages : /amiprotek-site/)."""
     base = ctx["page"].get("base")
-    return f'<base href="{esc(base)}">' if base else ""
+    if not base:
+        return ""
+    if base == "/":
+        base = ctx["build"]["base_path"]
+    return f'<base href="{esc(base)}">'
+
 
 
 def gen_robots_meta(ctx: dict) -> str:
-    return '<meta name="robots" content="noindex">' if ctx["page"].get("noindex") else ""
+    """noindex sur une page (404) ou sur tout le site (aperçu public avant la mise en ligne)."""
+    if ctx["page"].get("noindex") or ctx["build"]["noindex"]:
+        return '<meta name="robots" content="noindex, nofollow">'
+    return ""
 
 
 def gen_preview_fonts(ctx: dict) -> str:
@@ -699,7 +708,14 @@ def fingerprint(dist: Path, html_text: str) -> str:
     return re.sub(r'(href|src)="(/?assets/[^"?#]+\.(?:css|js))"', add_version, html_text)
 
 
-def build(src: Path = SRC, dist: Path = DIST, strict: bool = False, preview: bool = False) -> list[str]:
+def build(
+    src: Path = SRC,
+    dist: Path = DIST,
+    strict: bool = False,
+    preview: bool = False,
+    noindex: bool = False,
+    base_path: str = "/",
+) -> list[str]:
     """Construit le site et retourne la liste des avertissements."""
     site = load_json(src / "site.json")
     diagnostic = load_json(src / "data" / "diagnostic.json")
@@ -741,7 +757,14 @@ def build(src: Path = SRC, dist: Path = DIST, strict: bool = False, preview: boo
             "site": site,
             "diagnostic": diagnostic,
             "page": {**meta, "slug": slug, "url": page_url(site, slug)},
-            "build": {"year": str(dt.date.today().year), "preview": preview, "src": src, "strict": strict},
+            "build": {
+                "year": str(dt.date.today().year),
+                "preview": preview,
+                "src": src,
+                "strict": strict,
+                "noindex": noindex,
+                "base_path": base_path,
+            },
         }
         ctx["page_content"] = render(body, ctx, partials, GENERATORS)
         output = render(layout, ctx, partials, GENERATORS)
@@ -759,7 +782,7 @@ def build(src: Path = SRC, dist: Path = DIST, strict: bool = False, preview: boo
         if not meta.get("noindex"):
             sitemap_urls.append(ctx["page"]["url"])
 
-    write_seo_files(site, dist, sitemap_urls)
+    write_seo_files(site, dist, sitemap_urls, noindex)
 
     broken = check_links(dist)
     if broken:
@@ -767,7 +790,7 @@ def build(src: Path = SRC, dist: Path = DIST, strict: bool = False, preview: boo
     return warnings
 
 
-def write_seo_files(site: dict, dist: Path, urls: list[str]) -> None:
+def write_seo_files(site: dict, dist: Path, urls: list[str], noindex: bool = False) -> None:
     today = dt.date.today().isoformat()
     entries = "".join(f"<url><loc>{esc(u)}</loc><lastmod>{today}</lastmod></url>" for u in urls)
     (dist / "sitemap.xml").write_text(
@@ -775,19 +798,26 @@ def write_seo_files(site: dict, dist: Path, urls: list[str]) -> None:
         f'<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">{entries}</urlset>\n',
         encoding="utf-8",
     )
-    (dist / "robots.txt").write_text(
-        f"User-agent: *\nAllow: /\n\nSitemap: {site['url'].rstrip('/')}/sitemap.xml\n",
-        encoding="utf-8",
+    robots = (
+        "User-agent: *\nDisallow: /\n"
+        if noindex
+        else f"User-agent: *\nAllow: /\n\nSitemap: {site['url'].rstrip('/')}/sitemap.xml\n"
     )
+    (dist / "robots.txt").write_text(robots, encoding="utf-8")
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="Build du site AMI TECH")
     parser.add_argument("--strict", action="store_true", help="échoue si des mentions légales manquent")
     parser.add_argument("--preview", action="store_true", help="charge la police depuis Google Fonts")
+    parser.add_argument("--noindex", action="store_true", help="interdit l'indexation (aperçu public)")
+    parser.add_argument("--base-path", default="/", help="chemin du site, ex. /amiprotek-site/ sur GitHub Pages")
     args = parser.parse_args()
+    if not (args.base_path.startswith("/") and args.base_path.endswith("/")):
+        print("ERREUR : --base-path doit commencer et finir par / (ex. /amiprotek-site/)", file=sys.stderr)
+        return 1
     try:
-        warnings = build(strict=args.strict, preview=args.preview)
+        warnings = build(strict=args.strict, preview=args.preview, noindex=args.noindex, base_path=args.base_path)
     except BuildError as exc:
         print(f"ERREUR : {exc}", file=sys.stderr)
         return 1

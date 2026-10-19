@@ -1,0 +1,52 @@
+name: Aperçu GitHub Pages
+
+# Publie un aperçu public du site à chaque push sur main.
+# L'aperçu est construit avec --noindex : Google ne l'indexe pas, il ne fait
+# donc pas concurrence au site officiel amiprotek.fr.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Moindre privilège : lecture du dépôt, écriture limitée à Pages.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Un seul déploiement à la fois ; on n'interrompt pas un déploiement en cours.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Build de l'aperçu
+        run: python tools/build.py --strict --noindex --base-path /amiprotek-site/
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Déploiement
+        id: deployment
+        uses: actions/deploy-pages@v5

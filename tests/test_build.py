@@ -148,7 +148,7 @@ class BuildTests(unittest.TestCase):
         self.assertRegex(text, r'assets/css/main\.css\?v=[0-9a-f]{10}')
 
     def test_404_is_noindex_and_out_of_sitemap(self) -> None:
-        self.assertIn('content="noindex"', (self.dist / "404.html").read_text(encoding="utf-8"))
+        self.assertIn('content="noindex, nofollow"', (self.dist / "404.html").read_text(encoding="utf-8"))
         self.assertNotIn("404", (self.dist / "sitemap.xml").read_text(encoding="utf-8"))
 
     def test_internal_links_are_valid(self) -> None:
@@ -161,6 +161,15 @@ class BuildTests(unittest.TestCase):
             self.assertEqual(len(build.check_links(self.dist)), 2)
         finally:
             bad.unlink()
+
+    def test_noindex_preview_build(self) -> None:
+        """Aperçu public : aucune page indexable, 404 servie depuis le sous-dossier."""
+        out = self.tmp / "noindex"
+        build.build(dist=out, noindex=True, base_path="/amiprotek-site/")
+        for page in out.glob("*.html"):
+            self.assertIn('content="noindex, nofollow"', page.read_text(encoding="utf-8"), page.name)
+        self.assertIn("Disallow: /", (out / "robots.txt").read_text(encoding="utf-8"))
+        self.assertIn('<base href="/amiprotek-site/">', (out / "404.html").read_text(encoding="utf-8"))
 
     def test_strict_mode_builds(self) -> None:
         """Le build de production (--strict) passe : mentions légales complètes."""
