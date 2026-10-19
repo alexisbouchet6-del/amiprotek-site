@@ -49,26 +49,40 @@
     return node;
   }
 
+  /**
+   * Enregistre l'étape dans l'historique du navigateur. Certains cadres
+   * intégrés (iframe sandboxée) refusent l'API History : le diagnostic
+   * continue alors de fonctionner, sans le bouton Précédent du navigateur.
+   */
+  function saveState(replace = false) {
+    try {
+      const url = window.location.pathname + (replace ? window.location.search : "");
+      window.history[replace ? "replaceState" : "pushState"]({ path }, "", url);
+    } catch (error) {
+      /* Historique indisponible : sans conséquence pour le parcours. */
+    }
+  }
+
   // --- Navigation ----------------------------------------------------------
 
   function choose(option) {
     path = [...path, { node: current, label: option.label, next: option.next }];
     current = option.next;
-    window.history.pushState({ path }, "", window.location.pathname);
+    saveState();
     render("forward");
   }
 
   function rewindTo(index) {
     current = path[index].node;
     path = path.slice(0, index);
-    window.history.pushState({ path }, "", window.location.pathname);
+    saveState();
     render("back");
   }
 
   function restart() {
     path = [];
     current = tree.start;
-    window.history.pushState({ path }, "", window.location.pathname);
+    saveState();
     render("back");
   }
 
@@ -266,6 +280,6 @@
       current = target;
     }
   }
-  window.history.replaceState({ path }, "", window.location.pathname + window.location.search);
+  saveState(true);
   render(null);
 })();
