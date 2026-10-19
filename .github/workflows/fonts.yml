@@ -1,0 +1,40 @@
+name: Police auto-hébergée
+
+# Lancement manuel uniquement (onglet Actions > « Police auto-hébergée » > Run workflow).
+# Télécharge Archivo depuis Google Fonts et la committe dans src/assets/fonts/,
+# pour que le site public ne contacte jamais Google (RGPD).
+on:
+  workflow_dispatch:
+
+# Écriture nécessaire pour committer la police ; limitée à ce workflow manuel.
+permissions:
+  contents: write
+
+jobs:
+  fonts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Téléchargement de la police
+        run: python tools/fetch_fonts.py
+
+      - name: Vérification du build avec la police
+        run: python tools/build.py --strict
+
+      - name: Commit de la police
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/assets/fonts
+          if git diff --cached --quiet; then
+            echo "Police déjà à jour, rien à committer."
+          else
+            git commit -m "chore: auto-héberger la police Archivo"
+            git push
+          fi
