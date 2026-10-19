@@ -141,13 +141,6 @@ def esc(value: object) -> str:
     return html.escape(str(value), quote=True)
 
 
-JACK_SVG = (
-    '<svg viewBox="0 0 40 30" focusable="false">'
-    '<path class="jack__body" d="M3 3h34v18h-8v5H11v-5H3z"/>'
-    '<path class="jack__pins" d="M9 7v6M13 7v6M17 7v6M21 7v6M25 7v6M29 7v6M33 7v6"/>'
-    "</svg>"
-)
-
 # Pictogrammes des services (trait, 24 x 24), coloriés en CSS via currentColor.
 ICONS = {
     "reseau": '<circle cx="12" cy="5" r="2.2"/><circle cx="5" cy="19" r="2.2"/><circle cx="19" cy="19" r="2.2"/>'
@@ -217,16 +210,33 @@ def gen_brand_line(ctx: dict) -> str:
     return f'<ul class="brand-line" aria-label="Domaines d\'activité">{items}</ul>'
 
 
-def gen_hero_ports(ctx: dict) -> str:
+def gen_hub_nodes(ctx: dict) -> str:
+    """Nœuds du schéma d'accueil : un par service, reliés au centre AMI TECH."""
     items = []
     for svc in ctx["site"]["services"]:
         items.append(
-            f'<li><a class="port" href="services.html#{esc(svc["id"])}" data-port>'
-            f'<span class="port__jack" aria-hidden="true">{JACK_SVG}'
-            f'<span class="port__led"></span></span>'
-            f'<span class="port__name">{esc(svc["port"])}</span></a></li>'
+            f'<li class="hub__item"><a class="hub__node" href="services.html#{esc(svc["id"])}" data-node>'
+            f'<span class="hub__icon">{icon(svc["id"])}<span class="hub__led" aria-hidden="true"></span></span>'
+            f'<span class="hub__label">{esc(svc["port"])}</span></a></li>'
         )
     return "\n".join(items)
+
+
+def gen_marquee(ctx: dict) -> str:
+    """Bandeau défilant (site.json, brand.marquee). La 2e copie sert la boucle et reste muette."""
+    seen = ctx["site"]["brand"]["marquee"]
+    items = "".join(f"<li>{esc(w)}</li>" for w in seen)
+    return (
+        f'<ul class="marquee__list">{items}</ul>'
+        f'<ul class="marquee__list" aria-hidden="true">{items}</ul>'
+    )
+
+
+def gen_page_styles(ctx: dict) -> str:
+    """Feuilles de style propres à une page (clé « styles » de l'en-tête meta)."""
+    return "".join(
+        f'<link rel="stylesheet" href="assets/css/{esc(name)}.css">' for name in ctx["page"].get("styles", [])
+    )
 
 
 def gen_services_rows(ctx: dict) -> str:
@@ -514,7 +524,9 @@ GENERATORS: dict[str, Generator] = {
     "preview_fonts": gen_preview_fonts,
     "wordmark": gen_wordmark,
     "brand_line": gen_brand_line,
-    "hero_ports": gen_hero_ports,
+    "hub_nodes": gen_hub_nodes,
+    "marquee": gen_marquee,
+    "page_styles": gen_page_styles,
     "offers_gallery": gen_offers_gallery,
     "reviews": gen_reviews,
     "services_rows": gen_services_rows,

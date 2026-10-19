@@ -1,89 +1,123 @@
 <!--meta {
   "title": "Dépannage informatique, réseau et sécurité à Irigny (69)",
-  "description": "Dépannage de PC, réseau et Wi-Fi, serveurs NAS, vidéosurveillance, alarme et téléphonie IP à Irigny et dans la région lyonnaise. Pour les professionnels et les particuliers."
+  "description": "Dépannage de PC, réseau et Wi-Fi, serveurs NAS, vidéosurveillance, alarme et téléphonie IP à Irigny et dans la région lyonnaise. Pour les professionnels et les particuliers.",
+  "styles": ["home"]
 } -->
-<section class="hero" aria-labelledby="hero-title">
-  <div class="hero__inner">
-    <div class="hero__text">
-      <h1 id="hero-title">Dépannage informatique, réseau et sécurité à Irigny et dans le sud lyonnais.</h1>
-      <p class="hero__lead">Réparation d'ordinateurs, réseau et Wi-Fi, serveurs NAS, vidéosurveillance, alarme et téléphonie IP. Pour les professionnels comme pour les particuliers, sur place ou à distance.</p>
-      <div class="hero__actions">
-        <a class="btn btn--primary" href="diagnostic.html">Lancer le diagnostic</a>
-        <a class="btn btn--ghost" href="tel:{{ site.contact.phone_link }}">Appeler le {{ site.contact.phone_display }}</a>
-      </div>
+<section class="h-hero" aria-labelledby="hero-title">
+  <div class="h-hero__inner">
+    <p class="h-pill"><span class="h-pill__dot" aria-hidden="true"></span>Informatique locale, Irigny et sud lyonnais</p>
+    <h1 id="hero-title">Votre informatique, <span class="h-gradient">réparée, protégée et surveillée.</span></h1>
+    <p class="h-hero__lead">Dépannage de PC, réseau et Wi-Fi, serveurs NAS, vidéosurveillance, alarmes connectées et téléphonie IP, pour les particuliers comme pour les professionnels. Sur place ou à distance.</p>
+    <div class="h-hero__actions">
+      <a class="h-btn h-btn--primary" href="tel:{{ site.contact.phone_link }}">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1z"/></svg>
+        Appeler le {{ site.contact.phone_display }}
+      </a>
+      <a class="h-btn h-btn--glass" href="diagnostic.html">Lancer le diagnostic</a>
     </div>
-    <div class="panel" data-panel>
-      <div class="panel__head"><p class="panel__label" id="panel-label">Nos services</p><p class="panel__status" aria-hidden="true"><span class="panel__status-led"></span>6 liaisons actives</p></div>
-      <div class="panel__rack">
-        <span class="panel__screw" aria-hidden="true"></span>
-        <ul class="panel__ports" aria-labelledby="panel-label">
-{{@ hero_ports }}
-        </ul>
-        <span class="panel__screw" aria-hidden="true"></span>
-      </div>
-      <svg class="panel__cables" aria-hidden="true" focusable="false" data-cables></svg>
-    </div>
-  </div>
-</section>
-
-<section class="section symptoms" aria-labelledby="symptoms-title">
-  <div class="wrap">
-    <h2 id="symptoms-title">Un problème en ce moment ?</h2>
-    <p class="section__lead">Répondez à deux ou trois questions : le diagnostic vous indique la prestation adaptée, son prix et ce que vous pouvez faire tout de suite.</p>
-    <ul class="symptoms__list">
-      <li><a class="symptom" href="diagnostic.html?start=lent">
-        <svg class="symptom__icon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><circle cx="16" cy="17" r="11"/><path d="M16 17V10M16 17l-5 3M12 3h8"/></svg>
-        <span>Mon ordinateur est lent</span></a></li>
-      <li><a class="symptom" href="diagnostic.html?start=internet">
-        <svg class="symptom__icon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M4 12a17 17 0 0 1 24 0M8.5 16.5a11 11 0 0 1 15 0M13 21a4.5 4.5 0 0 1 6 0"/><path d="M5 5l22 22"/></svg>
-        <span>Je n'ai plus internet</span></a></li>
-      <li><a class="symptom" href="diagnostic.html?start=demarrage">
-        <svg class="symptom__icon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M16 4v11M10 7.5a11 11 0 1 0 12 0"/></svg>
-        <span>Mon ordinateur ne démarre plus</span></a></li>
-      <li><a class="symptom" href="diagnostic.html?start=virus">
-        <svg class="symptom__icon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M16 3l11 4v8c0 7-4.7 12-11 14-6.3-2-11-7-11-14V7z"/><path d="M16 10v7M16 21v1"/></svg>
-        <span>Virus ou message suspect</span></a></li>
+    <ul class="h-checks">
+      <li>Diagnostic avant tout remplacement</li>
+      <li>Tarifs affichés, devis clairs</li>
+      <li>Entreprise artisanale à Irigny</li>
     </ul>
-    <p class="symptoms__more"><a href="diagnostic.html">Autre situation : lancer le diagnostic complet</a></p>
+
+    <div class="hub" data-hub>
+      <div class="hub__head">
+        <div class="hub__title">
+          <span class="hub__title-icon" aria-hidden="true"></span>
+          <div>
+            <p class="hub__name" id="hub-title">Écosystème AMI TECH</p>
+            <p class="hub__sub">Un interlocuteur pour tout votre équipement</p>
+          </div>
+        </div>
+        <p class="h-status"><span class="h-status__dot" aria-hidden="true"></span>6 services connectés</p>
+      </div>
+      <div class="hub__body">
+        <svg class="hub__links" aria-hidden="true" focusable="false" data-links></svg>
+        <div class="hub__core" data-core>
+          <span class="hub__core-name">{{@ wordmark }}</span>
+          <span class="hub__core-sub">Irigny</span>
+        </div>
+        <ul class="hub__nodes" aria-labelledby="hub-title">
+{{@ hub_nodes }}
+        </ul>
+      </div>
+    </div>
   </div>
 </section>
 
-<section class="section services" aria-labelledby="services-title">
+<div class="h-marquee" role="region" aria-label="Nos domaines d'intervention">
+  <div class="h-marquee__track">
+{{@ marquee }}
+  </div>
+</div>
+
+<section class="h-section" aria-labelledby="symptoms-title">
   <div class="wrap">
-    <h2 id="services-title">Nos services</h2>
-    <p class="section__lead">Une seule équipe pour votre informatique, votre réseau, votre téléphonie et la sécurité de vos locaux.</p>
+    <p class="h-kicker">Diagnostic en ligne</p>
+    <h2 id="symptoms-title">Un problème en ce moment ?</h2>
+    <p class="h-lead">Répondez à deux ou trois questions : le diagnostic vous indique la prestation adaptée, son prix et ce que vous pouvez faire tout de suite.</p>
+    <ul class="h-cards h-cards--4">
+      <li><a class="h-card h-card--link" href="diagnostic.html?start=lent">
+        <span class="h-card__icon"><svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><circle cx="16" cy="17" r="11"/><path d="M16 17V10M16 17l-5 3M12 3h8"/></svg></span>
+        <span class="h-card__title">Mon ordinateur est lent</span>
+        <span class="h-card__more">Trouver la cause</span></a></li>
+      <li><a class="h-card h-card--link" href="diagnostic.html?start=internet">
+        <span class="h-card__icon"><svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M4 12a17 17 0 0 1 24 0M8.5 16.5a11 11 0 0 1 15 0M13 21a4.5 4.5 0 0 1 6 0"/><path d="M5 5l22 22"/></svg></span>
+        <span class="h-card__title">Je n'ai plus internet</span>
+        <span class="h-card__more">Rétablir la connexion</span></a></li>
+      <li><a class="h-card h-card--link" href="diagnostic.html?start=demarrage">
+        <span class="h-card__icon"><svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M16 4v11M10 7.5a11 11 0 1 0 12 0"/></svg></span>
+        <span class="h-card__title">Mon ordinateur ne démarre plus</span>
+        <span class="h-card__more">Identifier la panne</span></a></li>
+      <li><a class="h-card h-card--link" href="diagnostic.html?start=virus">
+        <span class="h-card__icon"><svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M16 3l11 4v8c0 7-4.7 12-11 14-6.3-2-11-7-11-14V7z"/><path d="M16 10v7M16 21v1"/></svg></span>
+        <span class="h-card__title">Virus ou message suspect</span>
+        <span class="h-card__more">Réagir correctement</span></a></li>
+    </ul>
+    <p class="h-more"><a href="diagnostic.html">Autre situation : lancer le diagnostic complet</a></p>
+  </div>
+</section>
+
+<section class="h-section h-section--alt" aria-labelledby="services-title">
+  <div class="wrap">
+    <p class="h-kicker">Nos services</p>
+    <h2 id="services-title">Une seule équipe pour tout votre équipement</h2>
+    <p class="h-lead">Informatique, réseau, téléphonie et sécurité de vos locaux : un interlocuteur qui connaît votre installation de bout en bout.</p>
     <ul class="svc-list">
 {{@ services_rows }}
     </ul>
   </div>
 </section>
 
-<section class="section offers-section" aria-labelledby="offers-title">
+<section class="h-section" aria-labelledby="offers-title">
   <div class="wrap">
+    <p class="h-kicker">Réalisations</p>
     <h2 id="offers-title">Nos réalisations en images</h2>
-    <p class="section__lead">Installations réseau, caméras, alarmes, serveurs et ateliers : un aperçu concret de ce que nous mettons en place chez nos clients.</p>
+    <p class="h-lead">Installations réseau, caméras, alarmes, serveurs et ateliers : un aperçu concret de ce que nous mettons en place chez nos clients.</p>
 {{@ offers_gallery }}
   </div>
 </section>
 
-<section class="section method" aria-labelledby="method-title">
+<section class="h-dark" aria-labelledby="method-title">
   <div class="wrap">
-    <h2 id="method-title">Comment nous travaillons</h2>
-    <p class="section__lead">Des devis clairs, des interventions documentées et un interlocuteur qui connaît votre installation.</p>
-    <ol class="steps">
-      <li class="step">
+    <p class="h-pill h-pill--small">Notre méthode</p>
+    <h2 id="method-title">Réparer avant de remplacer, quand c'est pertinent</h2>
+    <p class="h-lead">Des devis clairs, des interventions documentées et des recommandations proportionnées à votre besoin réel.</p>
+    <ol class="h-steps">
+      <li class="h-step">
         <h3>Étude</h3>
         <p>Nous analysons votre environnement et vos contraintes avant de proposer une solution.</p>
       </li>
-      <li class="step">
+      <li class="h-step">
         <h3>Installation</h3>
         <p>Nous installons et configurons le matériel selon vos besoins réels, pas une offre standard.</p>
       </li>
-      <li class="step">
+      <li class="h-step">
         <h3>Maintenance</h3>
         <p>Nous entretenons vos équipements pour anticiper les pannes plutôt que les subir.</p>
       </li>
-      <li class="step">
+      <li class="h-step">
         <h3>Assistance</h3>
         <p>En cas de problème, nous intervenons rapidement, sur site ou à distance.</p>
       </li>
@@ -91,31 +125,36 @@
   </div>
 </section>
 
-<section class="section reviews" aria-labelledby="reviews-title">
+<section class="h-section reviews" aria-labelledby="reviews-title">
   <div class="wrap">
+    <p class="h-kicker">Avis clients</p>
     <h2 id="reviews-title">Nos clients nous font confiance</h2>
 {{@ reviews }}
   </div>
 </section>
 
-<section class="section contact" id="contact" aria-labelledby="contact-title">
-  <div class="wrap contact__grid">
-    <div>
-      <h2 id="contact-title">Nous contacter</h2>
-      <p class="section__lead">Basés à Irigny, nous intervenons dans toute la région lyonnaise, pour les professionnels comme pour les particuliers.</p>
+<section class="h-cta" id="contact" aria-labelledby="contact-title">
+  <div class="wrap h-cta__inner">
+    <div class="h-cta__text">
+      <h2 id="contact-title">Un problème informatique ?</h2>
+      <p>Basés à Irigny, nous intervenons dans toute la région lyonnaise, chez les particuliers comme dans les entreprises. Appelez-nous ou écrivez-nous : nous vous répondons rapidement.</p>
+      <div class="h-hero__actions">
+        <a class="h-btn h-btn--primary" href="tel:{{ site.contact.phone_link }}">Appeler le {{ site.contact.phone_display }}</a>
+        <a class="h-btn h-btn--glass" href="mailto:{{ site.contact.email }}?subject=Demande%20de%20renseignement">Écrire un e-mail</a>
+      </div>
     </div>
-    <ul class="contact__list">
+    <ul class="h-contact">
       <li>
-        <span class="contact__kind">Téléphone</span>
-        <a class="contact__value" href="tel:{{ site.contact.phone_link }}">{{ site.contact.phone_display }}</a>
+        <span class="h-contact__kind">Téléphone</span>
+        <a class="h-contact__value" href="tel:{{ site.contact.phone_link }}">{{ site.contact.phone_display }}</a>
       </li>
       <li>
-        <span class="contact__kind">E-mail</span>
-        <a class="contact__value" href="mailto:{{ site.contact.email }}">{{ site.contact.email }}</a>
+        <span class="h-contact__kind">E-mail</span>
+        <a class="h-contact__value" href="mailto:{{ site.contact.email }}">{{ site.contact.email }}</a>
       </li>
       <li>
-        <span class="contact__kind">Adresse</span>
-        <a class="contact__value" href="{{ site.contact.map_url }}" rel="noopener">{{ site.contact.street }}, {{ site.contact.postcode }} {{ site.contact.city }}</a>
+        <span class="h-contact__kind">Adresse</span>
+        <a class="h-contact__value" href="{{ site.contact.map_url }}" rel="noopener">{{ site.contact.street }}, {{ site.contact.postcode }} {{ site.contact.city }}</a>
       </li>
     </ul>
   </div>

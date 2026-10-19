@@ -341,6 +341,16 @@
       "Réseaux",
       "Vidéo-surveillance",
       "Alarmes connectées"
+    ],
+    "marquee": [
+      "Dépannage informatique",
+      "Réseaux et Wi-Fi",
+      "Vidéo-surveillance",
+      "Alarmes connectées",
+      "Serveurs NAS",
+      "Téléphonie IP",
+      "Sécurité des données",
+      "Intervention à domicile"
     ]
   }
 }
