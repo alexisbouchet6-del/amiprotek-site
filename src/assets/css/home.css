@@ -56,15 +56,18 @@
   transition: transform 0.15s, box-shadow 0.2s, background-color 0.2s, border-color 0.2s;
 }
 .h-btn .icon { width: 1.15rem; height: 1.15rem; fill: currentColor; }
+/* Bouton « Appeler » : blanc et bleu nuit, combiné rouge discret ; plus d'aplat rouge lumineux. */
 .h-btn--primary {
-  background: var(--h-cta);
-  color: #ffffff;
-  box-shadow: 0 12px 30px -10px rgba(220, 38, 37, 0.75);
+  background: #ffffff;
+  color: var(--h-navy);
+  box-shadow: 0 12px 30px -14px rgba(0, 0, 0, 0.7);
 }
+.h-btn--primary .icon { fill: var(--red); }
 .h-btn--primary:hover {
-  color: #ffffff;
+  color: var(--h-navy);
+  background: #eef2f7;
   transform: translateY(-1px);
-  box-shadow: 0 16px 36px -10px rgba(220, 38, 37, 0.9);
+  box-shadow: 0 16px 36px -14px rgba(0, 0, 0, 0.8);
 }
 .h-btn--glass {
   background: var(--h-glass);
@@ -152,7 +155,8 @@
   letter-spacing: -0.015em;
 }
 .h-gradient {
-  background: linear-gradient(95deg, #ff5b50 0%, #ef4a3f 45%, #ffb3ad 100%);
+  /* Dégradé argent : met le titre en valeur sans l'agressivité du rouge, réservé aux boutons. */
+  background: linear-gradient(95deg, #ffffff 0%, #d5dbe6 45%, #a3aec0 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
