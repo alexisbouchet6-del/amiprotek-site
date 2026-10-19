@@ -10,7 +10,7 @@
     "street": "30 rue du Vieux Port",
     "postcode": "69540",
     "city": "Irigny",
-    "map_url": "https://www.openstreetmap.org/search?query=30%20rue%20du%20Vieux%20Port%2069540%20Irigny",
+    "map_url": "https://www.google.com/maps/search/?api=1&query=AMIPROTEK%2C%2030%20rue%20du%20Vieux%20Port%2C%2069540%20Irigny",
     "pagesjaunes_url": "https://www.pagesjaunes.fr/pros/53415754"
   },
   "prices_note": "Prix TTC pour les particuliers, HT pour les professionnels.",
@@ -321,7 +321,7 @@
     "Le matériel est testé selon les conditions standard définies par les constructeurs."
   ],
   "reviews": {
-    "google_url": "",
+    "google_url": "https://www.google.com/maps/search/?api=1&query=AMIPROTEK%2C%2030%20rue%20du%20Vieux%20Port%2C%2069540%20Irigny",
     "write_url": "",
     "rating": "",
     "count": "",

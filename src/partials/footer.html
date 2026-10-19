@@ -9,8 +9,8 @@
         </p>
       </div>
       <address class="site-footer__contact">
-        {{ site.contact.street }}<br>
-        {{ site.contact.postcode }} {{ site.contact.city }}<br>
+        <a href="{{ site.contact.map_url }}" target="_blank" rel="noopener" aria-label="{{ site.contact.street }}, {{ site.contact.postcode }} {{ site.contact.city }}, ouvrir dans Google Maps (nouvel onglet)">{{ site.contact.street }}<br>
+        {{ site.contact.postcode }} {{ site.contact.city }}</a><br>
         <a href="tel:{{ site.contact.phone_link }}">{{ site.contact.phone_display }}</a><br>
         <a href="mailto:{{ site.contact.email }}">{{ site.contact.email }}</a>
       </address>
