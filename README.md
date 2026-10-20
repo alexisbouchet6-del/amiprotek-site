@@ -105,9 +105,9 @@ Options du build :
 | Une question ou un résultat du diagnostic | `src/data/diagnostic.json` |
 | Les mentions légales | `src/site.json`, bloc `legal` |
 
-### Ajouter les photos des réalisations
+### Changer les images des services
 
-Déposez une photo par service dans `src/assets/img/offres/`, nommée d'après l'identifiant du service :
+Déposez une image par service dans `src/assets/img/offres/`, nommée d'après l'identifiant du service :
 
 | Service | Fichier |
 |---|---|

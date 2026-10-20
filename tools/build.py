@@ -184,7 +184,7 @@ def photo_figure(ctx: dict, svc: dict, css_class: str) -> str:
     photo = find_photo(ctx["build"]["src"], svc["id"])
     if photo:
         return (
-            f'<figure class="{css_class}"><img src="{esc(photo)}" alt="{esc(svc["name"])}, réalisation AMI TECH" '
+            f'<figure class="{css_class}"><img src="{esc(photo)}" alt="Illustration : {esc(svc["name"])}" '
             f'loading="lazy" decoding="async"></figure>'
         )
     hint = ""
