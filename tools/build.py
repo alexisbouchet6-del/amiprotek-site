@@ -29,7 +29,7 @@ import sys
 from collections.abc import Callable
 from html.parser import HTMLParser
 from pathlib import Path
-from urllib.parse import unquote, urlsplit
+from urllib.parse import quote, unquote, urlsplit
 
 ROOT = Path(__file__).resolve().parent.parent
 SRC = ROOT / "src"
@@ -274,7 +274,8 @@ def gen_services_detail(ctx: dict) -> str:
             if svc.get("brands")
             else ""
         )
-        subject = esc(f"Demande de devis : {svc['name']}")
+        # Objet de l'e-mail encodé selon la RFC 6068 (espaces, accents, deux-points).
+        subject = quote(f"Demande de devis : {svc['name']}")
         blocks.append(
             f'<section class="svc" id="{esc(svc["id"])}" aria-labelledby="{esc(svc["id"])}-title">'
             f'<div class="svc__head">'
