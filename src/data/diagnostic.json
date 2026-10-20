@@ -282,7 +282,8 @@
       "tips": [
         "Ne cliquez sur aucune fenêtre qui vous demande d'installer un logiciel ou d'appeler un numéro.",
         "Évitez de saisir des mots de passe ou des coordonnées bancaires sur cet ordinateur en attendant."
-      ]
+      ],
+      "offer": "antivirus"
     },
     "r_ransom": {
       "type": "result",
@@ -300,7 +301,8 @@
       "link": {
         "label": "Ouvrir 17cyber.gouv.fr",
         "url": "https://17cyber.gouv.fr/"
-      }
+      },
+      "offer": "antivirus"
     },
     "r_scam": {
       "type": "result",
@@ -320,7 +322,8 @@
       "link": {
         "label": "Ouvrir 17cyber.gouv.fr",
         "url": "https://17cyber.gouv.fr/"
-      }
+      },
+      "offer": "antivirus"
     },
     "r_reinstall": {
       "type": "result",
@@ -333,7 +336,8 @@
       "tips": [
         "Sauvegardez vos documents, photos et favoris sur un support externe.",
         "Listez les logiciels que vous utilisez et retrouvez leurs licences."
-      ]
+      ],
+      "offer": "antivirus"
     },
     "r_data": {
       "type": "result",
@@ -416,7 +420,8 @@
       "tips": [
         "Vérifiez quand a eu lieu votre dernière sauvegarde et si vous avez déjà testé sa restauration.",
         "Listez les personnes qui ont un accès administrateur."
-      ]
+      ],
+      "offer": "antivirus"
     },
     "slow_heat": {
       "type": "question",

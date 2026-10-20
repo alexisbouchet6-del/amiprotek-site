@@ -37,7 +37,7 @@
     return;
   }
 
-  const { tree, tarifs, services, contact } = data;
+  const { tree, tarifs, services, contact, antivirus } = data;
 
   /** Chemin parcouru : liste de { node, label, next }. */
   let path = [];
@@ -165,10 +165,16 @@
       const table = el("table", { class: "tarifs" });
       const head = el("thead");
       const headRow = el("tr");
+      // En-têtes sur deux lignes (« Professionnels » / « HT »), comme sur la page Tarifs.
+      const priceHead = (label, unit) => {
+        const th = el("th", { scope: "col", class: "num" }, label);
+        th.append(el("span", { class: "unit" }, unit));
+        return th;
+      };
       headRow.append(
         el("th", { scope: "col" }, "Prestation"),
-        el("th", { scope: "col", class: "num" }, "Professionnels HT"),
-        el("th", { scope: "col", class: "num" }, "Particuliers TTC")
+        priceHead("Professionnels", "HT"),
+        priceHead("Particuliers", "TTC")
       );
       head.append(headRow);
       const body = el("tbody");
@@ -201,6 +207,8 @@
       wrapper.append(tips);
     }
 
+    if (node.offer === "antivirus" && antivirus) wrapper.append(renderAntivirus(node));
+
     const actions = el("div", { class: "diag__actions" });
     actions.append(
       el("a", { class: "btn btn--primary", href: `tel:${contact.phone_link}` }, `Appeler le ${contact.phone_display}`),
@@ -221,6 +229,24 @@
     wrapper.append(links);
 
     return wrapper;
+  }
+
+  /** Proposition de protection antivirus, affichée sur les résultats liés aux virus. */
+  function renderAntivirus(node) {
+    const box = el("aside", { class: "diag__av", "aria-label": "Protection antivirus conseillée" });
+    box.append(el("h3", {}, node.urgent ? "Après l'incident : protéger vos postes" : "Pour éviter que cela se reproduise"));
+    box.append(
+      el(
+        "p",
+        {},
+        `Nous installons et activons ${antivirus.product} (${antivirus.edition}) sur vos ordinateurs : ` +
+          "protection contre les virus et les rançongiciels, blocage des sites et pièces jointes piégés, " +
+          "et analyse de l'origine d'une attaque pour la corriger durablement."
+      )
+    );
+    if (antivirus.stat) box.append(el("p", { class: "diag__av-stat" }, antivirus.stat));
+    box.append(el("a", { href: antivirus.page }, "Pourquoi un antivirus actif est indispensable"));
+    return box;
   }
 
   /** E-mail pré-rempli avec les réponses : le visiteur le relit avant d'envoyer. */

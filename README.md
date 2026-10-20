@@ -118,6 +118,17 @@ Déposez une photo par service dans `src/assets/img/offres/`, nommée d'après l
 
 Les formats `.webp`, `.jpg`, `.png` et `.avif` sont acceptés. Le build détecte la photo automatiquement et l'affiche sur l'accueil et sur la page Services. Recommandations : format paysage 4:3, 1600 px de large, moins de 300 Ko. Tant qu'une photo manque, un emplacement réservé s'affiche ; en production (`--strict`), il ne montre que le pictogramme du service.
 
+### Mettre à jour le compteur antivirus
+
+La page `antivirus.html` et les résultats du diagnostic liés aux virus affichent le nombre de postes infectés pris en charge sur les 7 derniers jours dont l'antivirus était absent ou désactivé. Chaque semaine, renseignez dans `src/site.json`, bloc `antivirus.infections` :
+
+| Champ | Contenu |
+|---|---|
+| `count` | Nombre de postes (entier, par exemple `"4"`) |
+| `until` | Dernier jour de la période, au format `AAAA-MM-JJ` (la période affichée couvre les 7 jours qui précèdent) |
+
+Tant que `count` est vide, l'encadré reste masqué. Le build signale un compteur de plus de 7 jours.
+
 ### Ajouter des avis Google
 
 Les avis sont saisis dans `src/site.json`, bloc `reviews` : le site ne charge aucun script Google, ne dépose aucun cookie et reste rapide.

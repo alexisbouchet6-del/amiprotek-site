@@ -763,6 +763,124 @@ main:focus { outline: none; }
   .tarifs thead th.num { width: 5.75rem; }
 }
 
+/* --- Page antivirus ------------------------------------------------------------ */
+.av-stack { display: grid; gap: clamp(2.5rem, 2rem + 2vw, 3.5rem); }
+.av-block h2 { font-size: clamp(1.5rem, 1.25rem + 1vw, 2rem); }
+.av-block > .note { margin-top: -0.25rem; }
+
+/* Constat de l'atelier : le chiffre clé, sur fond bleu nuit. */
+.av-stat {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem 1.75rem;
+  max-width: 52rem;
+  padding: 1.5rem 1.75rem;
+  border-radius: var(--radius);
+  background: var(--navy);
+  color: var(--on-navy);
+}
+.av-stat p { margin: 0; }
+.av-stat__num {
+  flex: none;
+  font-family: var(--font-display);
+  font-stretch: 112%;
+  font-weight: 800;
+  font-size: clamp(2.6rem, 2rem + 2.5vw, 3.6rem);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.av-stat__label { font-family: var(--font-display); font-stretch: 105%; font-weight: 700; font-size: 1.15rem; }
+.av-stat__label::before { content: ""; display: inline-block; width: 0.5rem; height: 0.5rem; margin-right: 0.6rem; background: var(--red); vertical-align: 0.15em; }
+.av-stat__meta { margin-top: 0.3rem !important; color: var(--on-navy-muted); font-size: 0.925rem; }
+
+.av-reasons {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+.av-reasons li {
+  padding: 1.35rem 1.5rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+.av-reasons h3 { margin-bottom: 0.4rem; font-size: 1.1rem; }
+.av-reasons p { margin: 0; color: var(--muted); }
+
+.av-features { max-width: 52rem; margin-top: 1rem; }
+
+.av-compare {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  max-width: 52rem;
+  margin: 1.25rem 0 1rem;
+}
+.av-compare__col {
+  padding: 1.35rem 1.5rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+.av-compare__col--edr { border-color: var(--ink); box-shadow: inset 0 3px 0 var(--red); }
+.av-compare__col h3 { margin-bottom: 0.4rem; font-size: 1.1rem; }
+.av-compare__col p { margin: 0; color: var(--muted); }
+
+.av-steps {
+  counter-reset: avstep;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 1.25rem 0 1rem;
+  padding: 0;
+  list-style: none;
+}
+.av-steps li { counter-increment: avstep; padding-top: 3.2rem; position: relative; }
+.av-steps li::before {
+  content: counter(avstep, decimal-leading-zero);
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: grid;
+  place-items: center;
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: var(--radius);
+  background: var(--navy);
+  color: var(--on-navy);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+.av-steps h3 { margin-bottom: 0.3rem; font-size: 1.1rem; }
+.av-steps p { margin: 0; color: var(--muted); }
+.av-price { margin: 0; }
+
+@media (max-width: 760px) {
+  .av-reasons,
+  .av-compare,
+  .av-steps { grid-template-columns: 1fr; }
+  .av-stat { flex-direction: column; align-items: flex-start; }
+}
+
+/* Proposition antivirus dans un résultat du diagnostic. */
+.diag__av {
+  margin-top: 1.75rem;
+  padding: 1.25rem 1.35rem;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--navy-3);
+  border-radius: var(--radius);
+  background: var(--paper);
+}
+.diag__av h3 { margin: 0 0 0.5rem !important; font-size: 1.05rem; }
+.diag__av p { margin: 0 0 0.6rem; }
+.diag__av-stat { font-weight: 700; }
+.diag__av a { font-weight: 700; }
+.diag__result.is-urgent .diag__av { background: var(--surface); }
+
 /* --- Pages de texte (légal) -------------------------------------------------- */
 .prose h2 { font-size: 1.5rem; margin-top: 2rem; }
 .prose h2:first-child { margin-top: 0; }

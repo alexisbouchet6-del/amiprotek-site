@@ -93,6 +93,42 @@ class DataTests(unittest.TestCase):
         with self.assertRaises(build.BuildError):
             build.validate_site(site)
 
+    def test_infection_window_format(self) -> None:
+        import datetime as dt
+        self.assertEqual(build.format_window(dt.date(2026, 10, 19)), "du 13 au 19 octobre 2026")
+        self.assertEqual(build.format_window(dt.date(2026, 10, 3)), "du 27 septembre au 3 octobre 2026")
+        self.assertEqual(build.format_window(dt.date(2027, 1, 2)), "du 27 décembre 2026 au 2 janvier 2027")
+
+    def test_infection_stat_hidden_when_empty(self) -> None:
+        site = copy.deepcopy(self.site)
+        site["antivirus"]["infections"].update(count="", until="")
+        self.assertIsNone(build.infection_stat(site))
+
+    def test_infection_stat_text(self) -> None:
+        site = copy.deepcopy(self.site)
+        site["antivirus"]["infections"].update(count="4", until="2026-10-19")
+        stat = build.infection_stat(site)
+        self.assertEqual(stat["count"], 4)
+        self.assertIn("4 postes infectés", stat["text"])
+        self.assertIn("du 13 au 19 octobre 2026", stat["text"])
+
+    def test_infection_stat_rejects_future_or_invalid(self) -> None:
+        for count, until in (("3", "2999-01-01"), ("trois", "2026-10-19"), ("3", "19/10/2026")):
+            site = copy.deepcopy(self.site)
+            site["antivirus"]["infections"].update(count=count, until=until)
+            with self.assertRaises(build.BuildError, msg=(count, until)):
+                build.validate_site(site)
+
+    def test_unknown_offer_is_rejected(self) -> None:
+        tree = copy.deepcopy(self.tree)
+        tree["nodes"]["r_adware"]["offer"] = "inconnue"
+        with self.assertRaises(build.BuildError):
+            build.validate_diagnostic(tree, self.site)
+
+    def test_virus_results_offer_antivirus(self) -> None:
+        for node in ("r_adware", "r_ransom", "r_scam", "r_reinstall", "r_security_pro"):
+            self.assertEqual(self.tree["nodes"][node].get("offer"), "antivirus", node)
+
     def test_review_date_format(self) -> None:
         self.assertEqual(build.format_review_date("2026-03"), "mars 2026")
         self.assertEqual(build.format_review_date("2026-13"), "")
@@ -113,7 +149,7 @@ class BuildTests(unittest.TestCase):
         shutil.rmtree(cls.tmp)
 
     def test_pages_are_generated(self) -> None:
-        names = ("index", "services", "diagnostic", "tarifs", "mentions-legales", "confidentialite", "404")
+        names = ("index", "services", "diagnostic", "tarifs", "antivirus", "mentions-legales", "confidentialite", "404")
         for name in names:
             self.assertTrue((self.dist / f"{name}.html").is_file(), name)
 
@@ -138,6 +174,11 @@ class BuildTests(unittest.TestCase):
         for page in self.dist.glob("*.html"):
             text = page.read_text(encoding="utf-8")
             self.assertNotIn("fonts.googleapis.com", text, page.name)
+
+    def test_antivirus_page_linked_and_data_injected(self) -> None:
+        self.assertIn('href="antivirus.html"', (self.dist / "tarifs.html").read_text(encoding="utf-8"))
+        diag = (self.dist / "diagnostic.html").read_text(encoding="utf-8")
+        self.assertIn('"antivirus": {"product": "Kaspersky Next EDR Foundations"', diag)
 
     def test_active_nav(self) -> None:
         text = (self.dist / "tarifs.html").read_text(encoding="utf-8")

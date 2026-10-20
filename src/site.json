@@ -387,5 +387,15 @@
       "Sécurité des données",
       "Intervention à domicile"
     ]
+  },
+  "antivirus": {
+    "product": "Kaspersky Next EDR Foundations",
+    "edition": "European Edition",
+    "price_note": "Sur devis, selon le nombre de postes à protéger.",
+    "infections": {
+      "count": "",
+      "until": "",
+      "note": "Postes infectés pris en charge par AMI TECH sur 7 jours, dont l'antivirus était absent ou désactivé. Renseigner count (nombre) et until (dernier jour, AAAA-MM-JJ)."
+    }
   }
 }

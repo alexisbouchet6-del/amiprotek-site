@@ -1,0 +1,99 @@
+<!--meta {
+  "title": "Protection antivirus pour vos postes : Kaspersky Next EDR",
+  "description": "Pourquoi un antivirus actif est indispensable, ce qu'apporte Kaspersky Next EDR Foundations et comment nous l'installons et l'activons sur vos postes, à Irigny et dans la région lyonnaise."
+} -->
+<section class="page-head" aria-labelledby="page-title">
+  <div class="wrap">
+    <h1 id="page-title">Protection antivirus</h1>
+    <p class="section__lead">Un ordinateur sans antivirus actif est la porte d'entrée la plus simple pour un virus ou un rançongiciel. Nous installons, activons et vérifions la protection de vos postes avec {{ site.antivirus.product }}.</p>
+  </div>
+</section>
+
+<div class="section section--tight">
+  <div class="wrap av-stack">
+    {{@ antivirus_stat }}
+
+    <section class="av-block" aria-labelledby="why-title">
+      <h2 id="why-title">Pourquoi un antivirus actif est indispensable</h2>
+      <ul class="av-reasons">
+        <li>
+          <h3>Les rançongiciels chiffrent vos fichiers</h3>
+          <p>Documents, photos, comptabilité : tout devient illisible, y compris les disques de sauvegarde branchés au moment de l'attaque. Une rançon est ensuite exigée, sans aucune garantie de récupérer vos données.</p>
+        </li>
+        <li>
+          <h3>Vos mots de passe et vos coordonnées bancaires sont visés</h3>
+          <p>De nombreux logiciels malveillants enregistrent ce que vous tapez ou volent les mots de passe enregistrés dans le navigateur : messagerie, banque, logiciels métier.</p>
+        </li>
+        <li>
+          <h3>Un poste infecté contamine tout le réseau</h3>
+          <p>En entreprise, il suffit d'un seul ordinateur non protégé pour qu'une infection se propage aux autres postes, au serveur et au NAS.</p>
+        </li>
+        <li>
+          <h3>Un antivirus désactivé ne protège plus</h3>
+          <p>Licence expirée, protection coupée pour installer un logiciel, mises à jour bloquées : un antivirus inactif laisse le poste sans aucune défense, même s'il est installé.</p>
+        </li>
+      </ul>
+    </section>
+
+    <section class="av-block" aria-labelledby="edr-title">
+      <h2 id="edr-title">Ce qu'apporte {{ site.antivirus.product }}</h2>
+      <p class="note">Une solution professionnelle qui va plus loin qu'un antivirus classique : elle bloque les menaces et vous montre aussi comment elles sont arrivées.</p>
+      <ul class="checklist av-features">
+        <li>Protection des fichiers, de la navigation web et de la messagerie</li>
+        <li>Protection contre les rançongiciels et les failles des logiciels</li>
+        <li>Pare-feu, contrôle des sites web, des clés USB et des applications</li>
+        <li>Analyse de l'origine d'une attaque, pour corriger la cause et pas seulement le symptôme</li>
+        <li>Console unique : l'état de protection de chaque poste visible d'un coup d'œil</li>
+        <li>Inventaire des logiciels et détection des vulnérabilités</li>
+        <li>Protection et gestion des smartphones et tablettes</li>
+      </ul>
+    </section>
+
+    <section class="av-block" aria-labelledby="compare-title">
+      <h2 id="compare-title">Antivirus classique ou EDR ?</h2>
+      <div class="av-compare">
+        <div class="av-compare__col">
+          <h3>Antivirus classique</h3>
+          <p>Détecte et bloque les menaces connues. Vous savez qu'une alerte a eu lieu, mais pas comment la menace est entrée ni si elle a touché d'autres fichiers.</p>
+        </div>
+        <div class="av-compare__col av-compare__col--edr">
+          <h3>EDR (détection et réponse)</h3>
+          <p>Bloque les menaces et retrace leur chemin sur le poste : quel fichier, quel site, quel programme. On corrige alors la vraie cause pour éviter que cela recommence.</p>
+        </div>
+      </div>
+      <p class="note">Windows intègre Microsoft Defender, utile pour un usage personnel. En entreprise, il faut en plus une console qui vérifie que chaque poste est réellement protégé et à jour, et qui alerte en cas de problème.</p>
+    </section>
+
+    <section class="av-block" aria-labelledby="how-title">
+      <h2 id="how-title">Notre accompagnement</h2>
+      <ol class="av-steps">
+        <li><h3>Point sur vos postes</h3><p>Nous faisons l'inventaire de vos ordinateurs et vérifions leur protection actuelle.</p></li>
+        <li><h3>Installation et activation</h3><p>Nous installons {{ site.antivirus.product }} ({{ site.antivirus.edition }}) et vérifions qu'il est actif sur chaque poste.</p></li>
+        <li><h3>Suivi</h3><p>En cas d'alerte ou de poste non protégé, nous intervenons sur site ou à distance.</p></li>
+      </ol>
+      <p class="av-price"><strong>Tarif :</strong> {{ site.antivirus.price_note }}</p>
+    </section>
+
+    <section class="av-block" aria-labelledby="tips-title">
+      <h2 id="tips-title">Les bons réflexes, en plus de l'antivirus</h2>
+      <ul class="checklist">
+        <li>Installez les mises à jour de Windows et de vos logiciels dès qu'elles sont proposées.</li>
+        <li>Gardez une sauvegarde déconnectée de l'ordinateur, sur un disque externe ou un NAS protégé.</li>
+        <li>Utilisez un mot de passe différent pour chaque service important.</li>
+        <li>Ne désactivez jamais l'antivirus pour installer un logiciel trouvé sur internet.</li>
+        <li>En cas de doute sur un message ou une pièce jointe, appelez-nous avant de cliquer.</li>
+      </ul>
+    </section>
+  </div>
+</div>
+
+<section class="section cta-band" aria-labelledby="cta-title">
+  <div class="wrap cta-band__inner">
+    <h2 id="cta-title">Vos postes sont-ils vraiment protégés ?</h2>
+    <p>Nous vérifions l'état de votre protection et vous proposons une solution adaptée au nombre de postes.</p>
+    <div class="diag__actions">
+      <a class="btn btn--primary" href="mailto:{{ site.contact.email }}?subject=Demande%20de%20devis%20antivirus">Demander un devis</a>
+      <a class="btn btn--line" href="tel:{{ site.contact.phone_link }}">Appeler le {{ site.contact.phone_display }}</a>
+    </div>
+  </div>
+</section>

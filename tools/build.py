@@ -306,8 +306,7 @@ def stars(rating: float | int) -> str:
 
 def format_review_date(value: str) -> str:
     """'2026-03' -> 'mars 2026' (format AAAA-MM)."""
-    months = ("janvier", "février", "mars", "avril", "mai", "juin", "juillet",
-              "août", "septembre", "octobre", "novembre", "décembre")
+    months = MONTHS
     match = re.fullmatch(r"(\d{4})-(\d{2})", value or "")
     if not match or not 1 <= int(match.group(2)) <= 12:
         return ""
@@ -373,6 +372,62 @@ def gen_reviews(ctx: dict) -> str:
         f'<ul class="reviews__track" data-track>{"".join(cards)}</ul></div>{controls}{links_html}'
         '<p class="reviews__legal">Avis publiés par nos clients sur notre fiche Google, sélectionnés par nos soins. '
         "Ils ne font pas l'objet d'une procédure de vérification de notre part.</p>"
+    )
+
+
+MONTHS = ("janvier", "février", "mars", "avril", "mai", "juin", "juillet",
+          "août", "septembre", "octobre", "novembre", "décembre")
+OFFERS = {"antivirus"}
+STAT_MAX_AGE_DAYS = 7
+
+
+def parse_day(value: str) -> dt.date | None:
+    try:
+        return dt.date.fromisoformat(value)
+    except (TypeError, ValueError):
+        return None
+
+
+def format_window(until: dt.date) -> str:
+    """Période de 7 jours se terminant le jour donné : « du 13 au 19 octobre 2026 »."""
+    start = until - dt.timedelta(days=6)
+    end_txt = f"{until.day} {MONTHS[until.month - 1]} {until.year}"
+    if start.year != until.year:
+        return f"du {start.day} {MONTHS[start.month - 1]} {start.year} au {end_txt}"
+    if start.month != until.month:
+        return f"du {start.day} {MONTHS[start.month - 1]} au {end_txt}"
+    return f"du {start.day} au {end_txt}"
+
+
+def infection_stat(site: dict) -> dict | None:
+    """Compteur de postes infectés sans antivirus actif, ou None s'il n'est pas renseigné."""
+    data = site.get("antivirus", {}).get("infections", {})
+    until = parse_day(data.get("until", ""))
+    count = data.get("count", "")
+    if count in ("", None) or until is None:
+        return None
+    count = int(count)
+    noun = "poste infecté" if count <= 1 else "postes infectés"
+    verb = "n'avait" if count <= 1 else "n'avaient"
+    return {
+        "count": count,
+        "window": format_window(until),
+        "text": f"{count} {noun} pris en charge par nos soins {format_window(until)} {verb} pas d'antivirus actif.",
+    }
+
+
+def gen_antivirus_stat(ctx: dict) -> str:
+    """Encadré du compteur ; rien n'est affiché tant que le chiffre n'est pas renseigné."""
+    stat = infection_stat(ctx["site"])
+    if not stat:
+        return ""
+    noun = "poste infecté" if stat["count"] <= 1 else "postes infectés"
+    return (
+        '<aside class="av-stat" aria-label="Constat de notre atelier sur les 7 derniers jours">'
+        f'<p class="av-stat__num">{stat["count"]}</p>'
+        f'<div><p class="av-stat__label">{noun} ces 7 derniers jours sans antivirus actif</p>'
+        f'<p class="av-stat__meta">Postes pris en charge par {esc(ctx["site"]["name"])} {esc(stat["window"])}.</p></div>'
+        "</aside>"
     )
 
 
@@ -450,6 +505,12 @@ def gen_diagnostic_data(ctx: dict) -> str:
         "tarifs": {t["id"]: t for t in all_tarifs(ctx["site"])},
         "services": {s["id"]: s["name"] for s in ctx["site"]["services"]},
         "contact": ctx["site"]["contact"],
+        "antivirus": {
+            "product": ctx["site"]["antivirus"]["product"],
+            "edition": ctx["site"]["antivirus"]["edition"],
+            "page": "antivirus.html",
+            "stat": (infection_stat(ctx["site"]) or {}).get("text", ""),
+        },
     }
     data = json.dumps(payload, ensure_ascii=False).replace("</", "<\\/")
     return f'<script type="application/json" id="diagnostic-data">{data}</script>'
@@ -548,6 +609,7 @@ GENERATORS: dict[str, Generator] = {
     "legal_editor": gen_legal_editor,
     "legal_host": gen_legal_host,
     "diagnostic_data": gen_diagnostic_data,
+    "antivirus_stat": gen_antivirus_stat,
 }
 
 
@@ -568,6 +630,15 @@ def validate_site(site: dict) -> None:
         rating = review.get("rating")
         if rating not in (None, "") and (not isinstance(rating, (int, float)) or not 1 <= rating <= 5):
             raise BuildError(f"avis de {review['author']} : note hors de 1 à 5")
+    infections = site.get("antivirus", {}).get("infections", {})
+    if infections.get("count") not in ("", None):
+        if not str(infections["count"]).isdigit():
+            raise BuildError("antivirus.infections.count : nombre entier positif attendu")
+        until = parse_day(infections.get("until", ""))
+        if until is None:
+            raise BuildError("antivirus.infections.until : date AAAA-MM-JJ attendue")
+        if until > dt.date.today():
+            raise BuildError("antivirus.infections.until : date dans le futur")
     group_ids = [g["id"] for g in site["tarifs"]]
     tarif_ids = [t["id"] for t in all_tarifs(site)]
     if len(group_ids + tarif_ids) != len(set(group_ids + tarif_ids)):
@@ -597,6 +668,9 @@ def validate_diagnostic(tree: dict, site: dict) -> None:
             for tid in node.get("tarifs", []):
                 if tid not in tarif_ids:
                     raise BuildError(f"diagnostic : {node_id} -> tarif inconnu {tid!r}")
+            offer = node.get("offer")
+            if offer and offer not in OFFERS:
+                raise BuildError(f"diagnostic : {node_id} -> offre inconnue {offer!r}")
             svc = node.get("service")
             if svc and svc not in service_ids:
                 raise BuildError(f"diagnostic : {node_id} -> service inconnu {svc!r}")
@@ -735,6 +809,12 @@ def build(
     undated = [r["author"] for r in site["reviews"]["items"] if not format_review_date(r.get("date", ""))]
     if undated:
         warnings.append("avis sans date (AAAA-MM, obligatoire à l'affichage) : " + ", ".join(undated))
+    infections = site.get("antivirus", {}).get("infections", {})
+    until = parse_day(infections.get("until", ""))
+    if infections.get("count") in ("", None):
+        warnings.append("compteur antivirus non renseigné (antivirus.infections) : l'encadré reste masqué")
+    elif until and (dt.date.today() - until).days > STAT_MAX_AGE_DAYS:
+        warnings.append(f"compteur antivirus arrêté au {until.isoformat()} : à mettre à jour (plus de 7 jours)")
     no_photo = [s["id"] for s in site["services"] if not find_photo(src, s["id"])]
     if no_photo:
         warnings.append(f"photos manquantes dans src/{PHOTO_DIR}/ : " + ", ".join(no_photo))
