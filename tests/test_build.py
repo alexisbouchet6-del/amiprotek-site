@@ -162,7 +162,8 @@ class BuildTests(unittest.TestCase):
         shutil.rmtree(cls.tmp)
 
     def test_pages_are_generated(self) -> None:
-        names = ("index", "services", "diagnostic", "tarifs", "antivirus", "mentions-legales", "confidentialite", "404")
+        names = ("index", "services", "chantiers", "diagnostic", "tarifs", "antivirus",
+                 "mentions-legales", "confidentialite", "404")
         for name in names:
             self.assertTrue((self.dist / f"{name}.html").is_file(), name)
 
@@ -259,6 +260,44 @@ class BuildTests(unittest.TestCase):
         text = (self.dist / "index.html").read_text(encoding="utf-8")
         self.assertIn("reviews__track", text)
         self.assertIn("procédure de vérification", text)
+
+    def test_chantiers_page_and_navigation(self) -> None:
+        self.assertTrue((self.dist / "chantiers.html").is_file())
+        text = (self.dist / "index.html").read_text(encoding="utf-8")
+        self.assertIn('href="chantiers.html" data-nav="chantiers"', text)
+
+    def test_chantiers_gallery_lists_photos_with_thumbnails(self) -> None:
+        src = Path(tempfile.mkdtemp())
+        try:
+            folder = src / build.CHANTIERS_DIR / "reseau"
+            folder.mkdir(parents=True)
+            for name in ("02.jpg", "01.jpg", "01.thumb.jpg", "notes.txt"):
+                (folder / name).write_bytes(b"x")
+            photos = build.find_chantiers(src, "reseau")
+            self.assertEqual([p["key"] for p in photos], ["reseau/01.jpg", "reseau/02.jpg"])
+            self.assertTrue(photos[0]["thumb"].endswith("01.thumb.jpg"))
+            self.assertTrue(photos[1]["thumb"].endswith("02.jpg"))  # pas de vignette : image complète
+            self.assertEqual(build.find_chantiers(src, "nas"), [])
+        finally:
+            shutil.rmtree(src)
+
+    def test_chantiers_empty_categories_hidden_in_production(self) -> None:
+        site = build.load_site(build.SRC)
+        src = Path(tempfile.mkdtemp())
+        try:
+            (src / build.CHANTIERS_DIR / "nas").mkdir(parents=True)
+            (src / build.CHANTIERS_DIR / "nas" / "01.jpg").write_bytes(b"x")
+            (src / "data").mkdir()
+            (src / build.CHANTIERS_CAPTIONS).write_text('{"nas/01.jpg": "Baie <NAS>"}', encoding="utf-8")
+            ctx = {"site": site, "build": {"src": src, "strict": True}}
+            html = build.gen_chantiers(ctx)
+            self.assertIn('id="chantiers-nas"', html)
+            self.assertNotIn('id="chantiers-reseau"', html)
+            self.assertIn('data-caption="Baie &lt;NAS&gt;"', html)
+            ctx["build"]["strict"] = False
+            self.assertIn("Aucune photo pour le moment", build.gen_chantiers(ctx))
+        finally:
+            shutil.rmtree(src)
 
     def test_photo_slots_show_hint_only_outside_production(self) -> None:
         dev = (self.dist / "index.html").read_text(encoding="utf-8")

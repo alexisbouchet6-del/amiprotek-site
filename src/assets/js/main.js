@@ -1,5 +1,5 @@
 /**
- * AMI TECH : carrousel d'avis de la page d'accueil.
+ * AMI TECH : carrousel d'avis, calculateur antivirus et visionneuse des chantiers.
  *
  * Défilement natif (doigt, molette, clavier) complété par des boutons
  * Précédent / Suivant et un compteur. Le réglage « réduire les animations »
@@ -110,6 +110,74 @@
     update();
   }
 
+  /* ------------------------------------------------------------------ */
+  /* Visionneuse de la page Nos chantiers                               */
+  /* ------------------------------------------------------------------ */
+  /* Sans JavaScript, chaque vignette reste un lien vers la photo complète. */
+  function initLightbox() {
+    const dialog = document.querySelector("[data-lightbox]");
+    const shots = Array.from(document.querySelectorAll("[data-shot]"));
+    if (!dialog || !shots.length || typeof dialog.showModal !== "function") return;
+
+    const img = dialog.querySelector("[data-lb-img]");
+    const caption = dialog.querySelector("[data-lb-caption]");
+    const count = dialog.querySelector("[data-lb-count]");
+    const prev = dialog.querySelector("[data-lb-prev]");
+    const next = dialog.querySelector("[data-lb-next]");
+    let group = [];
+    let index = 0;
+    let opener = null;
+
+    /** Affiche la photo n° i de la catégorie ouverte (navigation en boucle). */
+    const show = (i) => {
+      index = (i + group.length) % group.length;
+      const link = group[index];
+      const thumb = link.querySelector("img");
+      img.src = link.getAttribute("href");
+      img.alt = thumb ? thumb.alt : "";
+      caption.textContent = link.dataset.caption || "";
+      count.textContent = group.length > 1 ? `${index + 1} / ${group.length}` : "";
+      prev.hidden = next.hidden = group.length < 2;
+    };
+
+    shots.forEach((link) => {
+      link.addEventListener("click", (event) => {
+        if (event.ctrlKey || event.metaKey || event.shiftKey) return; // ouverture dans un onglet
+        event.preventDefault();
+        group = shots.filter((s) => s.dataset.shot === link.dataset.shot);
+        opener = link;
+        show(group.indexOf(link));
+        dialog.showModal();
+      });
+    });
+
+    prev.addEventListener("click", () => show(index - 1));
+    next.addEventListener("click", () => show(index + 1));
+    dialog.querySelector("[data-lb-close]").addEventListener("click", () => dialog.close());
+    // Un clic sur le fond (hors photo et boutons) ferme la visionneuse.
+    dialog.addEventListener("click", (event) => {
+      if (event.target === dialog) dialog.close();
+    });
+    dialog.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowRight") show(index + 1);
+      else if (event.key === "ArrowLeft") show(index - 1);
+    });
+    // Glissement du doigt vers la gauche ou la droite sur mobile.
+    let startX = null;
+    dialog.addEventListener("touchstart", (event) => { startX = event.touches[0].clientX; }, { passive: true });
+    dialog.addEventListener("touchend", (event) => {
+      if (startX === null) return;
+      const delta = event.changedTouches[0].clientX - startX;
+      if (Math.abs(delta) > 50 && group.length > 1) show(index + (delta < 0 ? 1 : -1));
+      startX = null;
+    });
+    dialog.addEventListener("close", () => {
+      img.removeAttribute("src");
+      if (opener) opener.focus();
+    });
+  }
+
   initCarousel();
   initPriceCalc();
+  initLightbox();
 })();

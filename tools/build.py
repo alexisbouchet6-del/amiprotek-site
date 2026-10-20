@@ -174,6 +174,107 @@ def find_photo(src: Path, service_id: str) -> str | None:
     return None
 
 
+CHANTIERS_DIR = "assets/img/chantiers"
+CHANTIERS_CAPTIONS = "data/chantiers.json"
+
+
+def find_chantiers(src: Path, service_id: str) -> list[dict]:
+    """Photos de chantier d'une catégorie : src/assets/img/chantiers/<service>/*.jpg.
+
+    Chaque photo peut avoir une vignette « nom.thumb.jpg » (créée par
+    tools/prepare_photos.py) ; à défaut, l'image complète sert de vignette.
+    """
+    folder = src / CHANTIERS_DIR / service_id
+    if not folder.is_dir():
+        return []
+    photos = []
+    for path in sorted(folder.iterdir()):
+        if path.suffix.lower() not in PHOTO_EXTENSIONS or ".thumb." in path.name:
+            continue
+        thumb = path.with_name(f"{path.stem}.thumb{path.suffix}")
+        rel = f"{CHANTIERS_DIR}/{service_id}/{path.name}"
+        photos.append({
+            "key": f"{service_id}/{path.name}",
+            "full": rel,
+            "thumb": f"{CHANTIERS_DIR}/{service_id}/{thumb.name}" if thumb.is_file() else rel,
+        })
+    return photos
+
+
+def chantiers_captions(src: Path) -> dict[str, str]:
+    path = src / CHANTIERS_CAPTIONS
+    return load_json(path) if path.is_file() else {}
+
+
+def chantier_groups(ctx: dict) -> list[tuple[dict, list[dict]]]:
+    """Catégories affichées : en production, seules celles qui ont des photos."""
+    src = ctx["build"]["src"]
+    groups = [(svc, find_chantiers(src, svc["id"])) for svc in ctx["site"]["services"]]
+    if ctx["build"]["strict"]:
+        groups = [(svc, photos) for svc, photos in groups if photos]
+    return groups
+
+
+def photo_count(n: int) -> str:
+    return "1 photo" if n == 1 else f"{n} photos"
+
+
+def gen_chantiers_toc(ctx: dict) -> str:
+    links = "".join(
+        f'<li><a href="#chantiers-{esc(svc["id"])}">{esc(svc["name"])} '
+        f'<span class="toc__count">{len(photos)}</span></a></li>'
+        for svc, photos in chantier_groups(ctx)
+    )
+    return f'<nav class="toc" aria-label="Catégories de chantiers"><ul>{links}</ul></nav>' if links else ""
+
+
+def gen_chantiers(ctx: dict) -> str:
+    captions = chantiers_captions(ctx["build"]["src"])
+    sections = []
+    for svc, photos in chantier_groups(ctx):
+        sid = esc(svc["id"])
+        if photos:
+            items = []
+            for index, photo in enumerate(photos, start=1):
+                caption = captions.get(photo["key"], "")
+                alt = caption or f"{svc['name']} : chantier AMI TECH, photo {index}"
+                figcaption = f'<span class="shot__caption">{esc(caption)}</span>' if caption else ""
+                items.append(
+                    f'<li><a class="shot" href="{esc(photo["full"])}" data-shot="{sid}" '
+                    f'data-caption="{esc(caption)}">'
+                    f'<img src="{esc(photo["thumb"])}" alt="{esc(alt)}" loading="lazy" decoding="async">'
+                    f"{figcaption}</a></li>"
+                )
+            body = f'<ul class="shots">{"".join(items)}</ul>'
+        else:  # uniquement hors production
+            body = (
+                f'<p class="shots__empty">Aucune photo pour le moment. Dossier : '
+                f"src/{esc(CHANTIERS_DIR)}/{sid}/</p>"
+            )
+        sections.append(
+            f'<section class="chantier" id="chantiers-{sid}" aria-labelledby="chantiers-{sid}-title">'
+            f'<div class="chantier__head"><span class="svc__icon">{icon(svc["id"])}</span>'
+            f'<h2 id="chantiers-{sid}-title">{esc(svc["name"])}</h2>'
+            f'<span class="chantier__count">{photo_count(len(photos))}</span>'
+            f'<a class="chantier__more" href="services.html#{sid}">Le service</a></div>'
+            f"{body}</section>"
+        )
+    if not sections:
+        return '<p class="shots__empty">Les photos de nos chantiers arrivent bientôt.</p>'
+    return "\n".join(sections)
+
+
+def chantiers_link(ctx: dict, svc: dict) -> str:
+    """Lien « Voir nos chantiers » sur la page Services, si la catégorie a des photos."""
+    photos = find_chantiers(ctx["build"]["src"], svc["id"])
+    if not photos:
+        return ""
+    return (
+        f'<a class="btn btn--line" href="chantiers.html#chantiers-{esc(svc["id"])}">'
+        f"Voir nos chantiers ({photo_count(len(photos))})</a>"
+    )
+
+
 def photo_figure(ctx: dict, svc: dict, css_class: str) -> str:
     """Photo du service, ou emplacement réservé tant qu'aucune photo n'est fournie.
 
@@ -285,8 +386,8 @@ def gen_services_detail(ctx: dict) -> str:
             f'<p class="svc__audience"><strong>Pour qui :</strong> {esc(svc["audience"])}</p>'
             f"{brands}"
             f'<h3>Ce que nous faisons</h3><ul class="checklist">{points}</ul>'
-            f'<a class="btn btn--primary" href="mailto:{esc(contact["email"])}?subject={subject}">'
-            f"Demander un devis</a></div>"
+            f'<div class="svc__actions"><a class="btn btn--primary" href="mailto:{esc(contact["email"])}?subject={subject}">'
+            f"Demander un devis</a>{chantiers_link(ctx, svc)}</div></div>"
             f'{photo_figure(ctx, svc, "svc__media")}</section>'
         )
     return "\n".join(blocks)
@@ -648,6 +749,8 @@ GENERATORS: dict[str, Generator] = {
     "marquee": gen_marquee,
     "page_styles": gen_page_styles,
     "offers_gallery": gen_offers_gallery,
+    "chantiers_toc": gen_chantiers_toc,
+    "chantiers": gen_chantiers,
     "reviews": gen_reviews,
     "services_rows": gen_services_rows,
     "services_detail": gen_services_detail,
@@ -878,6 +981,10 @@ def build(
         warnings.append("compteur antivirus vide (src/data/infections.json) : l'encadré reste masqué")
     elif infection_stat(site) is None:
         warnings.append("compteur antivirus à 0 ou de plus de 7 jours : l'encadré est masqué")
+    existing = {p["key"] for s in site["services"] for p in find_chantiers(src, s["id"])}
+    orphan = sorted(set(chantiers_captions(src)) - existing)
+    if orphan:
+        warnings.append(f"légendes sans photo dans src/{CHANTIERS_CAPTIONS} : " + ", ".join(orphan))
     no_photo = [s["id"] for s in site["services"] if not find_photo(src, s["id"])]
     if no_photo:
         warnings.append(f"photos manquantes dans src/{PHOTO_DIR}/ : " + ", ".join(no_photo))

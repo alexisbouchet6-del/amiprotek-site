@@ -1,0 +1,43 @@
+<!--meta {
+  "title": "Nos chantiers : réseau, vidéosurveillance, alarme, téléphonie",
+  "description": "Photos de nos installations : réseaux et Wi-Fi, caméras, alarmes, interphones, téléphonie IP et baies informatiques, chez nos clients de la région lyonnaise.",
+  "nav": "chantiers"
+} -->
+<section class="page-head" aria-labelledby="page-title">
+  <div class="wrap">
+    <h1 id="page-title">Nos chantiers</h1>
+    <p class="section__lead">Des photos de nos installations chez nos clients, classées par domaine. Cliquez sur une photo pour l'agrandir.</p>
+{{@ chantiers_toc }}
+  </div>
+</section>
+
+<div class="wrap chantiers">
+{{@ chantiers }}
+</div>
+
+<dialog class="lightbox" data-lightbox aria-label="Photo agrandie">
+  <figure class="lightbox__figure">
+    <img class="lightbox__img" data-lb-img alt="">
+    <figcaption class="lightbox__caption"><span data-lb-caption></span> <span class="lightbox__count" data-lb-count></span></figcaption>
+  </figure>
+  <button class="lightbox__btn lightbox__btn--close" type="button" data-lb-close aria-label="Fermer">
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6 6 18"/></svg>
+  </button>
+  <button class="lightbox__btn lightbox__btn--prev" type="button" data-lb-prev aria-label="Photo précédente">
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m15 5-7 7 7 7"/></svg>
+  </button>
+  <button class="lightbox__btn lightbox__btn--next" type="button" data-lb-next aria-label="Photo suivante">
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m9 5 7 7-7 7"/></svg>
+  </button>
+</dialog>
+
+<section class="section cta-band" aria-labelledby="cta-title">
+  <div class="wrap cta-band__inner">
+    <h2 id="cta-title">Un projet d'installation ?</h2>
+    <p>Nous étudions votre site et vous remettons un devis clair, sans engagement.</p>
+    <div class="cta-band__actions">
+      <a class="btn btn--primary" href="tel:{{ site.contact.phone_link }}">Appeler le {{ site.contact.phone_display }}</a>
+      <a class="btn btn--line" href="mailto:{{ site.contact.email }}?subject=Demande%20de%20devis">Demander un devis</a>
+    </div>
+  </div>
+</section>

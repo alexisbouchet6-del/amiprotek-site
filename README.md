@@ -8,7 +8,7 @@ Le site remplace l'ancienne version Wix. Il est statique, rapide, sans cookie ni
 
 - **Accueil animé** : une baie de brassage dont chaque port mène à un service. Au chargement, les câbles se branchent un par un et les voyants de liaison s'allument. L'animation est désactivée si le visiteur a activé « réduire les animations » dans son système.
 - **Diagnostic guidé** : un arbre de questions (PC lent, plus d'internet, virus, données perdues, etc.) qui aboutit à une prestation, son prix, les bons réflexes et un e-mail pré-rempli. Il fonctionne entièrement dans le navigateur ; aucune réponse n'est transmise.
-- **Pages** : services, tarifs, mentions légales, confidentialité et page 404.
+- **Pages** : services, nos chantiers (galerie photo avec visionneuse), diagnostic, tarifs, protection antivirus, mentions légales, confidentialité et page 404.
 - **Thème sombre** automatique selon les préférences du système.
 - **Accessibilité** : navigation au clavier, lien d'évitement, gestion du focus dans le diagnostic, contrastes vérifiés.
 - **Sécurité** : politique CSP stricte, aucun script ni style en ligne, aucune ressource tierce, police auto-hébergée (conformité RGPD).
@@ -119,6 +119,20 @@ Déposez une image par service dans `src/assets/img/offres/`, nommée d'après l
 | Sécurité des données | `securite.jpg` |
 
 Les formats `.webp`, `.jpg`, `.png` et `.avif` sont acceptés. Le build détecte la photo automatiquement et l'affiche sur l'accueil et sur la page Services. Recommandations : format paysage 4:3, 1600 px de large, moins de 300 Ko. Tant qu'une photo manque, un emplacement réservé s'affiche ; en production (`--strict`), il ne montre que le pictogramme du service.
+
+### Ajouter des photos de chantier (page « Nos chantiers »)
+
+La page `chantiers.html` présente vos vraies photos d'installation, classées par service (mêmes catégories que la page Services). Une catégorie sans photo n'apparaît pas en production.
+
+1. Installez Pillow une seule fois (uniquement pour ce script) : `python -m pip install Pillow`
+2. Lancez, avec l'identifiant du service (`reseau`, `nas`, `videosurveillance`, `maintenance`, `telephonie`, `securite`) :
+   ```bash
+   python tools/prepare_photos.py videosurveillance ~/Images/portail.jpg ~/Images/camera.jpg
+   ```
+   Le script redresse les photos, **supprime leurs métadonnées (dont la position GPS du téléphone)**, les redimensionne et crée une vignette. Les fichiers sont numérotés à la suite des photos existantes dans `src/assets/img/chantiers/<service>/`.
+3. Facultatif : ajoutez une légende dans `src/data/chantiers.json`, par exemple `"videosurveillance/09.jpg": "Caméra sur mât, parking d'entreprise"`.
+
+Avant de publier une photo : aucune personne reconnaissable sans son accord écrit, aucun nom, adresse, plaque ou numéro lisible, aucun écran affichant les données d'un client.
 
 ### Compteur antivirus (mise à jour automatique)
 
