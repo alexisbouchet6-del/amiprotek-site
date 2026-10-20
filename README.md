@@ -176,7 +176,7 @@ La mise en ligne est automatique (workflow `.github/workflows/deploy-ovh.yml`) :
    ```
 3. Dans GitHub : Settings > Secrets and variables > Actions, créez les secrets `OVH_SFTP_HOST`, `OVH_SFTP_USER`, `OVH_SFTP_PASSWORD`, `OVH_SFTP_KNOWN_HOSTS` (sortie complète de la commande ci-dessus) et, si le dossier n'est pas `www`, `OVH_SFTP_PATH`.
 4. Lancez une première fois le workflow (onglet Actions > Déploiement OVH > Run workflow) et testez le site à l'adresse provisoire de l'hébergement.
-5. Après validation par la direction seulement : faites pointer le domaine vers l'hébergement OVH, puis activez le certificat SSL gratuit (Let's Encrypt) dans l'espace client. Vérifiez ensuite les en-têtes de sécurité, par exemple avec <https://securityheaders.com>.
+5. Après validation par la direction seulement : dans l'espace client OVH, onglet **Multisite**, ajoutez `ami-tech.fr` et `www.ami-tech.fr` (dossier `www`), ainsi que `amiprotek.fr` et `www.amiprotek.fr` (même dossier : le `.htaccess` les redirige vers `https://www.ami-tech.fr`, page par page). Modifiez ensuite les enregistrements **A et AAAA** des deux domaines vers l'adresse IP de l'hébergement, **sans toucher aux enregistrements MX** (les e-mails passent par Mailinblack). Activez enfin le certificat SSL gratuit (Let's Encrypt) pour les quatre adresses et vérifiez les en-têtes de sécurité, par exemple avec <https://securityheaders.com>.
 
 Tant que les secrets ne sont pas créés, le workflow s'exécute sans rien envoyer. L'envoi ne supprime aucun fichier sur l'hébergement.
 
@@ -188,11 +188,12 @@ Un aperçu public, non indexé par les moteurs de recherche, est publié par `.g
 
 - [x] Mentions légales renseignées à partir du registre national des entreprises (SIREN 817 637 390).
 - [x] Grille tarifaire 2026 : prix TTC pour les particuliers, HT pour les professionnels.
-- [ ] Ajouter le capital social (`legal.capital`), exigé par la LCEN pour une société.
+- [x] Capital social renseigné (2 500 €, capital fixe).
 - [ ] Vérifier le numéro de téléphone d'OVH dans les mentions légales (`legal.hebergeur_contact`).
 - [ ] Configurer les secrets OVH et le registre du compteur antivirus.
 - [x] Police Archivo auto-hébergée et committée.
-- [ ] Valider les textes avec la direction d'AMIPROTEK.
+- [x] Textes et tarifs validés par la direction (octobre 2026).
+- [ ] Souscrire l'hébergement web OVH, rattacher les domaines ami-tech.fr et amiprotek.fr, activer le SSL.
 
 ## Conventions
 

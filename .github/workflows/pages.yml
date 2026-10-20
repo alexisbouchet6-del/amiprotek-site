@@ -2,7 +2,7 @@ name: Aperçu GitHub Pages
 
 # Publie un aperçu public du site à chaque push sur main.
 # L'aperçu est construit avec --noindex : Google ne l'indexe pas, il ne fait
-# donc pas concurrence au site officiel amiprotek.fr.
+# donc pas concurrence au site officiel ami-tech.fr.
 on:
   push:
     branches: [main]

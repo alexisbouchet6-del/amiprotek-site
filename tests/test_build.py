@@ -194,6 +194,8 @@ class BuildTests(unittest.TestCase):
         self.assertIn("Content-Security-Policy", conf)
         self.assertIn("RewriteCond %{SERVER_PORT} 80", conf)
         self.assertIn("ErrorDocument 404 /404.html", conf)
+        self.assertIn("RewriteCond %{HTTP_HOST} ^(www\\.)?amiprotek\\.fr$ [NC]", conf)
+        self.assertLess(conf.index("amiprotek"), conf.index("SERVER_PORT"))
         self.assertIn("RewriteRule ^infrastructure\\-réseau/?$ /services.html#reseau [R=301,L,NE]", conf)
         self.assertIn("RewriteRule ^service\\-page/.*$ /tarifs.html", conf)
         self.assertNotIn("{{", conf)

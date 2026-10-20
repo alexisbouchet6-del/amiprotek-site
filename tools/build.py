@@ -1071,11 +1071,19 @@ def htaccess_generators(site: dict, redirects: list[dict]) -> dict[str, Generato
             pattern = re.escape(source) + "/?"
         return f'  RewriteRule ^{pattern}$ {item["to"]} [R=301,L,NE]'
 
+    def legacy_rule(domain: str) -> str:
+        domain = domain.strip().lower().removeprefix("www.")
+        return (
+            f"  RewriteCond %{{HTTP_HOST}} ^(www\\.)?{re.escape(domain)}$ [NC]\n"
+            f"  RewriteRule ^(.*)$ https://{host}/$1 [R=301,L]"
+        )
+
     return {
         "htaccess_host": lambda ctx: host,
         "htaccess_host_regex": lambda ctx: re.escape(host),
         "htaccess_apex_regex": lambda ctx: re.escape(apex),
         "htaccess_redirects": lambda ctx: "\n".join(rule(r) for r in redirects),
+        "htaccess_legacy": lambda ctx: "\n".join(legacy_rule(d) for d in site.get("legacy_domains", [])),
     }
 
 

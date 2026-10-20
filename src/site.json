@@ -1,6 +1,9 @@
 {
   "name": "AMI TECH",
-  "url": "https://www.amiprotek.fr",
+  "url": "https://www.ami-tech.fr",
+  "legacy_domains": [
+    "amiprotek.fr"
+  ],
   "lang": "fr",
   "tagline": "Informatique, réseaux, vidéo-surveillance et alarmes connectées à Irigny",
   "contact": {
@@ -18,7 +21,7 @@
     "raison_sociale": "AMIPROTEK",
     "nom_commercial": "AMI TECH",
     "forme_juridique": "Société par actions simplifiée (SAS)",
-    "capital": "",
+    "capital": "2 500 € (capital fixe)",
     "siege": "30 rue du Vieux Port, 69540 Irigny",
     "siren": "817 637 390",
     "rcs": "RCS Lyon 817 637 390",
@@ -397,7 +400,7 @@
       "mobiles": 2
     },
     "national": {
-      "value": "500\u00a0000",
+      "value": "500 000",
       "prefix": "Plus de",
       "label": "victimes de cybermalveillance assistées en France en 2025",
       "detail": "Hausse de 20 % par rapport à 2024. L'hameçonnage reste la première menace.",
