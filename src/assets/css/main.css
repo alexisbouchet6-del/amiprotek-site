@@ -799,6 +799,19 @@ main:focus { outline: none; }
 .av-stat__label { font-family: var(--font-display); font-stretch: 105%; font-weight: 700; font-size: 1.15rem; }
 .av-stat__label::before { content: ""; display: inline-block; width: 0.5rem; height: 0.5rem; margin-right: 0.6rem; background: var(--red); vertical-align: 0.15em; }
 .av-stat__meta { margin-top: 0.3rem !important; color: var(--on-navy-muted); font-size: 0.925rem; }
+.av-stat__meta a { color: var(--on-navy); text-decoration-color: var(--red); }
+.av-stat__meta a:hover { color: #ffffff; }
+.av-stat__prefix {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: var(--on-navy-muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-stretch: 100%;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.av-stat + .av-stat { margin-top: -0.5rem; }
 
 .av-reasons {
   display: grid;

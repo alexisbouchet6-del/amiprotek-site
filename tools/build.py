@@ -580,6 +580,22 @@ def gen_antivirus_stat(ctx: dict) -> str:
     )
 
 
+def gen_antivirus_national(ctx: dict) -> str:
+    """Chiffre national annuel, toujours affiché avec son année et sa source (site.json, antivirus.national)."""
+    nat = ctx["site"]["antivirus"].get("national")
+    if not nat:
+        return ""
+    prefix = f'<span class="av-stat__prefix">{esc(nat["prefix"])}</span>' if nat.get("prefix") else ""
+    return (
+        '<aside class="av-stat av-stat--national" aria-label="Chiffre national">'
+        f'<p class="av-stat__num">{prefix}{esc(nat["value"])}</p>'
+        f'<div><p class="av-stat__label">{esc(nat["label"])}</p>'
+        f'<p class="av-stat__meta">{esc(nat.get("detail", ""))} Source : '
+        f'<a href="{esc(nat["url"])}" target="_blank" rel="noopener">{esc(nat["source"])}</a>.</p></div>'
+        "</aside>"
+    )
+
+
 def all_tarifs(site: dict) -> list[dict]:
     """Liste à plat de tous les tarifs, toutes catégories confondues."""
     return [item for group in site["tarifs"] for item in group["items"]]
@@ -762,6 +778,7 @@ GENERATORS: dict[str, Generator] = {
     "legal_host": gen_legal_host,
     "diagnostic_data": gen_diagnostic_data,
     "antivirus_stat": gen_antivirus_stat,
+    "antivirus_national": gen_antivirus_national,
     "antivirus_price": gen_antivirus_price,
 }
 

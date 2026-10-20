@@ -203,6 +203,13 @@ class BuildTests(unittest.TestCase):
         self.assertIn('id="antivirus"', (self.dist / "tarifs.html").read_text(encoding="utf-8"))
         self.assertIn("data-av-calc", (self.dist / "antivirus.html").read_text(encoding="utf-8"))
 
+    def test_antivirus_national_figure_carries_year_and_source(self) -> None:
+        text = (self.dist / "antivirus.html").read_text(encoding="utf-8")
+        self.assertIn("av-stat--national", text)
+        self.assertIn("en 2025", text)
+        self.assertIn("Source :", text)
+        self.assertIn('href="https://www.cybermalveillance.gouv.fr/', text)
+
     def test_antivirus_page_linked_and_data_injected(self) -> None:
         self.assertIn('href="antivirus.html"', (self.dist / "tarifs.html").read_text(encoding="utf-8"))
         diag = (self.dist / "diagnostic.html").read_text(encoding="utf-8")

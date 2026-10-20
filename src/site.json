@@ -395,6 +395,14 @@
       "pro": 70,
       "part": 70,
       "mobiles": 2
+    },
+    "national": {
+      "value": "500\u00a0000",
+      "prefix": "Plus de",
+      "label": "victimes de cybermalveillance assistées en France en 2025",
+      "detail": "Hausse de 20 % par rapport à 2024. L'hameçonnage reste la première menace.",
+      "source": "Cybermalveillance.gouv.fr, rapport d'activité 2025 (communiqué du 26 mars 2026)",
+      "url": "https://www.cybermalveillance.gouv.fr/medias/2026/03/CP-RA2026.pdf"
     }
   }
 }

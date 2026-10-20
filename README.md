@@ -146,6 +146,8 @@ La page `antivirus.html` et les résultats du diagnostic liés aux virus affiche
 
 Le résultat est enregistré dans `src/data/infections.json` (modifiable à la main si besoin). L'encadré est masqué si le compteur est vide, vaut 0 ou date de plus de 7 jours.
 
+Sous ce compteur, la page affiche un **chiffre national annuel** sourcé (`src/site.json`, bloc `antivirus.national`). À mettre à jour chaque année à la parution du rapport d'activité de Cybermalveillance.gouv.fr (fin mars), en changeant la valeur, l'année, la source et le lien.
+
 ### Ajouter des avis Google
 
 Les avis sont saisis dans `src/site.json`, bloc `reviews` : le site ne charge aucun script Google, ne dépose aucun cookie et reste rapide.
