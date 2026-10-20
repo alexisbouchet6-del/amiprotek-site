@@ -24,7 +24,9 @@ amiprotek-site/
 │   ├── partials/             # Fragments : header.html, footer.html
 │   ├── pages/                # Une page = un fichier HTML avec en-tête meta
 │   ├── assets/               # CSS, JS, images, polices
-│   └── static/               # Copié tel quel : _headers, _redirects
+│   ├── data/infections.json  # Compteur antivirus (mis à jour chaque jour)
+│   ├── data/redirects.json   # Anciennes adresses Wix -> nouvelles pages
+│   └── server/htaccess.conf  # Modèle du .htaccess (OVH : sécurité, HTTPS, redirections)
 ├── tools/
 │   ├── build.py              # Générateur du site (bibliothèque standard)
 │   └── fetch_fonts.py        # Téléchargement de la police à auto-héberger
@@ -39,7 +41,7 @@ flowchart LR
     D[layouts + partials] --> B
     B --> E{Contrôles}
     E -->|données, liens, jetons| F[dist/]
-    F --> G[Cloudflare Pages]
+    F -->|SFTP| G[Hébergement web OVH]
 ```
 
 Le générateur remplace les jetons `{{ site.contact.email }}` (valeur échappée), `{{> header }}` (fragment) et `{{@ tarifs_table }}` (bloc produit à partir des données). Il refuse de produire le site si une variable est inconnue, si l'arbre du diagnostic pointe vers une question inexistante ou si un lien interne est cassé.
@@ -118,16 +120,17 @@ Déposez une photo par service dans `src/assets/img/offres/`, nommée d'après l
 
 Les formats `.webp`, `.jpg`, `.png` et `.avif` sont acceptés. Le build détecte la photo automatiquement et l'affiche sur l'accueil et sur la page Services. Recommandations : format paysage 4:3, 1600 px de large, moins de 300 Ko. Tant qu'une photo manque, un emplacement réservé s'affiche ; en production (`--strict`), il ne montre que le pictogramme du service.
 
-### Mettre à jour le compteur antivirus
+### Compteur antivirus (mise à jour automatique)
 
-La page `antivirus.html` et les résultats du diagnostic liés aux virus affichent le nombre de postes infectés pris en charge sur les 7 derniers jours dont l'antivirus était absent ou désactivé. Chaque semaine, renseignez dans `src/site.json`, bloc `antivirus.infections` :
+La page `antivirus.html` et les résultats du diagnostic liés aux virus affichent le nombre de postes infectés pris en charge sur les 7 derniers jours dont l'antivirus n'était pas actif. Ce chiffre est recalculé **chaque jour** par le workflow `.github/workflows/antivirus-compteur.yml`, à partir du registre de l'atelier.
 
-| Champ | Contenu |
-|---|---|
-| `count` | Nombre de postes (entier, par exemple `"4"`) |
-| `until` | Dernier jour de la période, au format `AAAA-MM-JJ` (la période affichée couvre les 7 jours qui précèdent) |
+1. Tenez un registre (Google Sheets ou Excel en ligne) avec une ligne par poste infecté pris en charge, sur le modèle de `docs/modele-registre-infections.csv` : colonnes `date` (AAAA-MM-JJ ou JJ/MM/AAAA) et `antivirus_actif` (`oui` / `non`).
+2. Publiez la feuille au format CSV (Google Sheets : Fichier > Partager > Publier sur le Web > format CSV).
+3. Dans GitHub : Settings > Secrets and variables > Actions > New repository secret, nom `REGISTRE_CSV_URL`, valeur = l'adresse CSV publiée.
 
-Tant que `count` est vide, l'encadré reste masqué. Le build signale un compteur de plus de 7 jours.
+**Le CSV publié est lisible par toute personne qui connaît son adresse : n'y mettez aucun nom de client ni donnée personnelle.** Gardez le détail des interventions dans un autre onglet non publié.
+
+Le résultat est enregistré dans `src/data/infections.json` (modifiable à la main si besoin). L'encadré est masqué si le compteur est vide, vaut 0 ou date de plus de 7 jours.
 
 ### Ajouter des avis Google
 
@@ -144,24 +147,34 @@ La date de chaque avis est obligatoire (article L111-7-2 du Code de la consommat
 
 Chaque résultat du diagnostic peut référencer des tarifs (`"tarifs": ["ssd"]`) et un service (`"service": "maintenance"`) par leur identifiant. Les tests vérifient que chaque question est accessible et que chaque référence existe.
 
-## Déploiement (Cloudflare Pages)
+## Déploiement (hébergement web OVH)
 
-1. Poussez le dépôt sur GitHub.
-2. Dans Cloudflare, ouvrez **Workers & Pages**, puis créez un projet Pages relié au dépôt.
-3. Renseignez la configuration de build :
-   - Commande de build : `python tools/build.py --strict`
-   - Répertoire de sortie : `dist`
-4. Ajoutez le domaine `www.amiprotek.fr` dans **Custom domains**, puis mettez à jour les enregistrements DNS chez le registraire.
-5. Après la bascule, vérifiez les redirections des anciennes adresses Wix (fichier `src/static/_redirects`) et les en-têtes de sécurité, par exemple avec <https://securityheaders.com>.
+Le site est statique : il fonctionne sur toutes les offres d'hébergement web OVH, sans PHP ni base de données. Le build génère un fichier `.htaccess` (en-têtes de sécurité, HTTPS obligatoire, adresse avec « www », redirections des anciennes adresses Wix, page 404).
 
-Les fichiers `_headers` et `_redirects` sont lus nativement par Cloudflare Pages.
+La mise en ligne est automatique (workflow `.github/workflows/deploy-ovh.yml`) : à chaque modification poussée sur `main` et après chaque mise à jour du compteur antivirus. Configuration, une seule fois :
+
+1. Espace client OVH : Web Cloud > Hébergements > votre offre > onglet **FTP - SSH**. Notez le serveur SFTP et cochez **SFTP** pour l'utilisateur. Utilisez un utilisateur dont le dossier racine ne contient que le site.
+2. Depuis un PC, récupérez l'empreinte du serveur (à vérifier une fois avec FileZilla, qui affiche la même empreinte à la première connexion) :
+   ```bash
+   ssh-keyscan -p 22 ftp.clusterXXX.hosting.ovh.net
+   ```
+3. Dans GitHub : Settings > Secrets and variables > Actions, créez les secrets `OVH_SFTP_HOST`, `OVH_SFTP_USER`, `OVH_SFTP_PASSWORD`, `OVH_SFTP_KNOWN_HOSTS` (sortie complète de la commande ci-dessus) et, si le dossier n'est pas `www`, `OVH_SFTP_PATH`.
+4. Lancez une première fois le workflow (onglet Actions > Déploiement OVH > Run workflow) et testez le site à l'adresse provisoire de l'hébergement.
+5. Après validation par la direction seulement : faites pointer le domaine vers l'hébergement OVH, puis activez le certificat SSL gratuit (Let's Encrypt) dans l'espace client. Vérifiez ensuite les en-têtes de sécurité, par exemple avec <https://securityheaders.com>.
+
+Tant que les secrets ne sont pas créés, le workflow s'exécute sans rien envoyer. L'envoi ne supprime aucun fichier sur l'hébergement.
+
+### Aperçu GitHub Pages
+
+Un aperçu public, non indexé par les moteurs de recherche, est publié par `.github/workflows/pages.yml` (Settings > Pages > Source : GitHub Actions). Il peut être désactivé après la mise en ligne chez OVH.
 
 ## Avant la mise en ligne
 
 - [x] Mentions légales renseignées à partir du registre national des entreprises (SIREN 817 637 390).
 - [x] Grille tarifaire 2026 : prix TTC pour les particuliers, HT pour les professionnels.
 - [ ] Ajouter le capital social (`legal.capital`), exigé par la LCEN pour une société.
-- [ ] Confirmer l'hébergeur si le site n'est pas déployé sur Cloudflare Pages.
+- [ ] Vérifier le numéro de téléphone d'OVH dans les mentions légales (`legal.hebergeur_contact`).
+- [ ] Configurer les secrets OVH et le registre du compteur antivirus.
 - [ ] Télécharger et committer la police (`python tools/fetch_fonts.py`).
 - [ ] Valider les textes avec la direction d'AMIPROTEK.
 

@@ -1,0 +1,58 @@
+[
+  {
+    "from": "nous-choisir",
+    "to": "/"
+  },
+  {
+    "from": "book-online",
+    "to": "/tarifs.html"
+  },
+  {
+    "from": "my-subscriptions",
+    "to": "/"
+  },
+  {
+    "from": "infrastructure-réseau",
+    "to": "/services.html#reseau"
+  },
+  {
+    "from": "serveur-nas",
+    "to": "/services.html#nas"
+  },
+  {
+    "from": "vidéo-surveillance-et-alarme",
+    "to": "/services.html#videosurveillance"
+  },
+  {
+    "from": "maintenance-informatique",
+    "to": "/services.html#maintenance"
+  },
+  {
+    "from": "fournisseurs-internet-téléphonie",
+    "to": "/services.html#telephonie"
+  },
+  {
+    "from": "sécurité-et-protection-des-données",
+    "to": "/services.html#securite"
+  },
+  {
+    "from": "mentions-légales",
+    "to": "/mentions-legales.html"
+  },
+  {
+    "from": "politique-de-confidentialité",
+    "to": "/confidentialite.html"
+  },
+  {
+    "from": "politique-en-matière-de-cookies",
+    "to": "/confidentialite.html"
+  },
+  {
+    "from": "conditions-d-utilisation",
+    "to": "/mentions-legales.html"
+  },
+  {
+    "from": "service-page/*",
+    "to": "/tarifs.html"
+  }
+]

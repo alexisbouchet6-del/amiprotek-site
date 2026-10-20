@@ -85,5 +85,31 @@
     update();
   };
 
+  /* ------------------------------------------------------------------ */
+  /* Calculateur du tarif antivirus (page antivirus.html)               */
+  /* ------------------------------------------------------------------ */
+  function initPriceCalc() {
+    const box = document.querySelector("[data-av-calc]");
+    if (!box) return;
+    const input = box.querySelector("[data-av-input]");
+    const result = box.querySelector("[data-av-result]");
+    const pro = Number(box.dataset.pro);
+    const part = Number(box.dataset.part);
+    const fmt = new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR", minimumFractionDigits: 0, maximumFractionDigits: 2 });
+
+    const update = () => {
+      const n = Math.floor(Number(input.value));
+      if (!Number.isFinite(n) || n < 1 || n > 500) {
+        result.textContent = "Indiquez un nombre de postes entre 1 et 500.";
+        return;
+      }
+      const label = n === 1 ? "1 poste" : `${n} postes`;
+      result.textContent = `${label} : ${fmt.format(pro * n)} HT par an (professionnels), ${fmt.format(part * n)} TTC par an (particuliers).`;
+    };
+    input.addEventListener("input", update);
+    update();
+  }
+
   initCarousel();
+  initPriceCalc();
 })();

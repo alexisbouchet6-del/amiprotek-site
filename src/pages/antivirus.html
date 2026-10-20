@@ -71,7 +71,11 @@
         <li><h3>Installation et activation</h3><p>Nous installons {{ site.antivirus.product }} ({{ site.antivirus.edition }}) et vérifions qu'il est actif sur chaque poste.</p></li>
         <li><h3>Suivi</h3><p>En cas d'alerte ou de poste non protégé, nous intervenons sur site ou à distance.</p></li>
       </ol>
-      <p class="av-price"><strong>Tarif :</strong> {{ site.antivirus.price_note }}</p>
+    </section>
+
+    <section class="av-block" aria-labelledby="price-title">
+      <h2 id="price-title">Tarif</h2>
+      {{@ antivirus_price }}
     </section>
 
     <section class="av-block" aria-labelledby="tips-title">

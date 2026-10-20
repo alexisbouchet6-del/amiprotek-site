@@ -15,6 +15,7 @@ sys.path.insert(0, str(ROOT / "tools"))
 
 import build  # noqa: E402
 import fetch_fonts  # noqa: E402
+import update_infections  # noqa: E402
 
 
 class RenderTests(unittest.TestCase):
@@ -43,7 +44,7 @@ class RenderTests(unittest.TestCase):
 
 class DataTests(unittest.TestCase):
     def setUp(self) -> None:
-        self.site = json.loads((ROOT / "src" / "site.json").read_text(encoding="utf-8"))
+        self.site = build.load_site(build.SRC)
         self.tree = json.loads((ROOT / "src" / "data" / "diagnostic.json").read_text(encoding="utf-8"))
 
     def test_diagnostic_tree_is_valid(self) -> None:
@@ -99,25 +100,37 @@ class DataTests(unittest.TestCase):
         self.assertEqual(build.format_window(dt.date(2026, 10, 3)), "du 27 septembre au 3 octobre 2026")
         self.assertEqual(build.format_window(dt.date(2027, 1, 2)), "du 27 décembre 2026 au 2 janvier 2027")
 
-    def test_infection_stat_hidden_when_empty(self) -> None:
+    def test_infection_stat_hidden_when_empty_zero_or_stale(self) -> None:
+        import datetime as dt
+        today = dt.date(2026, 10, 20)
         site = copy.deepcopy(self.site)
-        site["antivirus"]["infections"].update(count="", until="")
-        self.assertIsNone(build.infection_stat(site))
+        for data in ({}, {"count": None, "until": None}, {"count": 0, "until": "2026-10-19"},
+                     {"count": 4, "until": "2026-10-10"}):
+            site["antivirus"]["infections"] = data
+            self.assertIsNone(build.infection_stat(site, today), data)
 
     def test_infection_stat_text(self) -> None:
+        import datetime as dt
         site = copy.deepcopy(self.site)
-        site["antivirus"]["infections"].update(count="4", until="2026-10-19")
-        stat = build.infection_stat(site)
+        site["antivirus"]["infections"] = {"count": 4, "until": "2026-10-19"}
+        stat = build.infection_stat(site, dt.date(2026, 10, 20))
         self.assertEqual(stat["count"], 4)
         self.assertIn("4 postes infectés", stat["text"])
         self.assertIn("du 13 au 19 octobre 2026", stat["text"])
 
     def test_infection_stat_rejects_future_or_invalid(self) -> None:
-        for count, until in (("3", "2999-01-01"), ("trois", "2026-10-19"), ("3", "19/10/2026")):
+        for count, until in ((3, "2999-01-01"), ("trois", "2026-10-19"), (3, "19/10/2026")):
             site = copy.deepcopy(self.site)
-            site["antivirus"]["infections"].update(count=count, until=until)
+            site["antivirus"]["infections"] = {"count": count, "until": until}
             with self.assertRaises(build.BuildError, msg=(count, until)):
                 build.validate_site(site)
+
+    def test_antivirus_tarif_generated_from_price(self) -> None:
+        group = build.antivirus_tarif_group(self.site)
+        item = group["items"][0]
+        price = self.site["antivirus"]["price"]
+        self.assertEqual(item["pro"], f"{price['pro']} € / an")
+        self.assertEqual(item["part"], f"{price['part']} € / an")
 
     def test_unknown_offer_is_rejected(self) -> None:
         tree = copy.deepcopy(self.tree)
@@ -174,6 +187,20 @@ class BuildTests(unittest.TestCase):
         for page in self.dist.glob("*.html"):
             text = page.read_text(encoding="utf-8")
             self.assertNotIn("fonts.googleapis.com", text, page.name)
+
+    def test_htaccess_for_ovh(self) -> None:
+        conf = (self.dist / ".htaccess").read_text(encoding="utf-8")
+        self.assertIn("Content-Security-Policy", conf)
+        self.assertIn("RewriteCond %{SERVER_PORT} 80", conf)
+        self.assertIn("ErrorDocument 404 /404.html", conf)
+        self.assertIn("RewriteRule ^infrastructure\\-réseau/?$ /services.html#reseau [R=301,L,NE]", conf)
+        self.assertIn("RewriteRule ^service\\-page/.*$ /tarifs.html", conf)
+        self.assertNotIn("{{", conf)
+
+    def test_antivirus_price_on_pages(self) -> None:
+        self.assertIn("antivirus_poste", (self.dist / "diagnostic.html").read_text(encoding="utf-8"))
+        self.assertIn('id="antivirus"', (self.dist / "tarifs.html").read_text(encoding="utf-8"))
+        self.assertIn("data-av-calc", (self.dist / "antivirus.html").read_text(encoding="utf-8"))
 
     def test_antivirus_page_linked_and_data_injected(self) -> None:
         self.assertIn('href="antivirus.html"', (self.dist / "tarifs.html").read_text(encoding="utf-8"))
@@ -244,6 +271,44 @@ class BuildTests(unittest.TestCase):
             self.skipTest("toutes les photos sont fournies")
         self.assertIn("Photo à déposer", dev)
         self.assertNotIn("Photo à déposer", prod)
+
+
+class InfectionCounterTests(unittest.TestCase):
+    """Comptage depuis le registre CSV de l'atelier."""
+
+    CSV = (
+        "Date,Antivirus actif\n"
+        "2026-10-12,non\n"       # hors période (avant le 13)
+        "13/10/2026,non\n"       # format JJ/MM/AAAA, compté
+        "2026-10-15,oui\n"       # antivirus actif : non compté
+        "2026-10-19,NON\n"       # dernier jour, compté
+        "2026-10-20,non\n"       # après la période
+        "\n"
+        "pas une date,non\n"     # ligne illisible, ignorée
+    )
+
+    def test_counts_only_window_and_inactive(self) -> None:
+        import datetime as dt
+        self.assertEqual(update_infections.count_infections(self.CSV, dt.date(2026, 10, 19)), 2)
+
+    def test_missing_column_is_an_error(self) -> None:
+        import datetime as dt
+        with self.assertRaises(update_infections.RegistryError):
+            update_infections.count_infections("jour,client\n2026-10-19,Dupont\n", dt.date(2026, 10, 19))
+
+    def test_http_url_refused(self) -> None:
+        with self.assertRaises(update_infections.RegistryError):
+            update_infections.fetch("http://exemple.fr/registre.csv")
+
+    def test_write_only_when_changed(self) -> None:
+        import datetime as dt
+        out = Path(tempfile.mkdtemp()) / "infections.json"
+        try:
+            self.assertTrue(update_infections.write_result(3, dt.date(2026, 10, 19), out))
+            self.assertFalse(update_infections.write_result(3, dt.date(2026, 10, 19), out))
+            self.assertTrue(update_infections.write_result(4, dt.date(2026, 10, 19), out))
+        finally:
+            shutil.rmtree(out.parent)
 
 
 class FontTests(unittest.TestCase):

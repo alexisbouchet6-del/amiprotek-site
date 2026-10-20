@@ -399,14 +399,21 @@ def format_window(until: dt.date) -> str:
     return f"du {start.day} au {end_txt}"
 
 
-def infection_stat(site: dict) -> dict | None:
-    """Compteur de postes infectés sans antivirus actif, ou None s'il n'est pas renseigné."""
-    data = site.get("antivirus", {}).get("infections", {})
-    until = parse_day(data.get("until", ""))
-    count = data.get("count", "")
+def infection_stat(site: dict, today: dt.date | None = None) -> dict | None:
+    """Compteur de postes infectés sans antivirus actif (src/data/infections.json).
+
+    Masqué (None) s'il n'est pas renseigné, s'il vaut 0, ou s'il date de plus
+    de 7 jours : « ces 7 derniers jours » doit toujours être vrai.
+    """
+    data = site.get("antivirus", {}).get("infections") or {}
+    until = parse_day(data.get("until") or "")
+    count = data.get("count")
     if count in ("", None) or until is None:
         return None
     count = int(count)
+    today = today or dt.date.today()
+    if count == 0 or (today - until).days > STAT_MAX_AGE_DAYS:
+        return None
     noun = "poste infecté" if count <= 1 else "postes infectés"
     verb = "n'avait" if count <= 1 else "n'avaient"
     return {
@@ -414,6 +421,46 @@ def infection_stat(site: dict) -> dict | None:
         "window": format_window(until),
         "text": f"{count} {noun} pris en charge par nos soins {format_window(until)} {verb} pas d'antivirus actif.",
     }
+
+
+def euros(value: int | float) -> str:
+    return f"{value:g} €".replace(".", ",")
+
+
+def antivirus_tarif_group(site: dict) -> dict:
+    """Catégorie « Protection antivirus » de la page Tarifs, générée depuis antivirus.price."""
+    price, av = site["antivirus"]["price"], site["antivirus"]
+    return {
+        "id": "antivirus",
+        "title": "Protection antivirus",
+        "items": [{
+            "id": "antivirus_poste",
+            "name": f"{av['product']}, licence d'un an par poste ({price['mobiles']} smartphones inclus)",
+            "pro": f"{euros(price['pro'])} / an",
+            "part": f"{euros(price['part'])} / an",
+        }],
+        "note": "Prix par licence d'un an : 3 postes = 3 licences.",
+    }
+
+
+def gen_antivirus_price(ctx: dict) -> str:
+    """Tarif et calculateur du nombre de postes (le calcul est fait par main.js)."""
+    price = ctx["site"]["antivirus"]["price"]
+    example = 3
+    return (
+        f'<div class="av-calc" data-av-calc data-pro="{price["pro"]}" data-part="{price["part"]}">'
+        f'<p class="av-calc__price"><strong>{euros(price["pro"])} HT</strong> par poste et par an pour les professionnels, '
+        f'<strong>{euros(price["part"])} TTC</strong> pour les particuliers. '
+        f'Chaque licence couvre aussi {price["mobiles"]} smartphones.</p>'
+        '<div class="av-calc__row">'
+        '<label for="av-postes">Nombre de postes</label>'
+        f'<input id="av-postes" type="number" inputmode="numeric" min="1" max="500" step="1" value="{example}" data-av-input>'
+        '</div>'
+        '<p class="av-calc__result" aria-live="polite" data-av-result>'
+        f'{example} postes : {euros(price["pro"] * example)} HT par an (professionnels), '
+        f'{euros(price["part"] * example)} TTC par an (particuliers).</p>'
+        "</div>"
+    )
 
 
 def gen_antivirus_stat(ctx: dict) -> str:
@@ -510,6 +557,7 @@ def gen_diagnostic_data(ctx: dict) -> str:
             "edition": ctx["site"]["antivirus"]["edition"],
             "page": "antivirus.html",
             "stat": (infection_stat(ctx["site"]) or {}).get("text", ""),
+            "price": ctx["site"]["antivirus"]["price"],
         },
     }
     data = json.dumps(payload, ensure_ascii=False).replace("</", "<\\/")
@@ -610,6 +658,7 @@ GENERATORS: dict[str, Generator] = {
     "legal_host": gen_legal_host,
     "diagnostic_data": gen_diagnostic_data,
     "antivirus_stat": gen_antivirus_stat,
+    "antivirus_price": gen_antivirus_price,
 }
 
 
@@ -630,15 +679,19 @@ def validate_site(site: dict) -> None:
         rating = review.get("rating")
         if rating not in (None, "") and (not isinstance(rating, (int, float)) or not 1 <= rating <= 5):
             raise BuildError(f"avis de {review['author']} : note hors de 1 à 5")
-    infections = site.get("antivirus", {}).get("infections", {})
+    price = site.get("antivirus", {}).get("price", {})
+    for key in ("pro", "part", "mobiles"):
+        if not isinstance(price.get(key), (int, float)) or price[key] < 0:
+            raise BuildError(f"antivirus.price.{key} : nombre positif attendu")
+    infections = site.get("antivirus", {}).get("infections") or {}
     if infections.get("count") not in ("", None):
         if not str(infections["count"]).isdigit():
-            raise BuildError("antivirus.infections.count : nombre entier positif attendu")
-        until = parse_day(infections.get("until", ""))
+            raise BuildError("infections.json : count doit être un entier positif")
+        until = parse_day(infections.get("until") or "")
         if until is None:
-            raise BuildError("antivirus.infections.until : date AAAA-MM-JJ attendue")
+            raise BuildError("infections.json : until doit être une date AAAA-MM-JJ")
         if until > dt.date.today():
-            raise BuildError("antivirus.infections.until : date dans le futur")
+            raise BuildError("infections.json : until est dans le futur")
     group_ids = [g["id"] for g in site["tarifs"]]
     tarif_ids = [t["id"] for t in all_tarifs(site)]
     if len(group_ids + tarif_ids) != len(set(group_ids + tarif_ids)):
@@ -761,6 +814,16 @@ def load_json(path: Path) -> dict:
         raise BuildError(f"{path.relative_to(ROOT)} : JSON invalide ({exc})") from exc
 
 
+def load_site(src: Path = SRC) -> dict:
+    """Données du site : site.json, compteur antivirus et tarif antivirus généré."""
+    site = load_json(src / "site.json")
+    # Compteur antivirus : fichier séparé, mis à jour chaque jour par tools/update_infections.py.
+    infections_file = src / "data" / "infections.json"
+    site["antivirus"]["infections"] = load_json(infections_file) if infections_file.is_file() else {}
+    site["tarifs"] = [g for g in site["tarifs"] if g["id"] != "antivirus"] + [antivirus_tarif_group(site)]
+    return site
+
+
 def page_url(site: dict, slug: str) -> str:
     base = site["url"].rstrip("/")
     if slug == "index":
@@ -791,7 +854,7 @@ def build(
     base_path: str = "/",
 ) -> list[str]:
     """Construit le site et retourne la liste des avertissements."""
-    site = load_json(src / "site.json")
+    site = load_site(src)
     diagnostic = load_json(src / "data" / "diagnostic.json")
     validate_site(site)
     validate_diagnostic(diagnostic, site)
@@ -809,12 +872,11 @@ def build(
     undated = [r["author"] for r in site["reviews"]["items"] if not format_review_date(r.get("date", ""))]
     if undated:
         warnings.append("avis sans date (AAAA-MM, obligatoire à l'affichage) : " + ", ".join(undated))
-    infections = site.get("antivirus", {}).get("infections", {})
-    until = parse_day(infections.get("until", ""))
+    infections = site["antivirus"].get("infections") or {}
     if infections.get("count") in ("", None):
-        warnings.append("compteur antivirus non renseigné (antivirus.infections) : l'encadré reste masqué")
-    elif until and (dt.date.today() - until).days > STAT_MAX_AGE_DAYS:
-        warnings.append(f"compteur antivirus arrêté au {until.isoformat()} : à mettre à jour (plus de 7 jours)")
+        warnings.append("compteur antivirus vide (src/data/infections.json) : l'encadré reste masqué")
+    elif infection_stat(site) is None:
+        warnings.append("compteur antivirus à 0 ou de plus de 7 jours : l'encadré est masqué")
     no_photo = [s["id"] for s in site["services"] if not find_photo(src, s["id"])]
     if no_photo:
         warnings.append(f"photos manquantes dans src/{PHOTO_DIR}/ : " + ", ".join(no_photo))
@@ -863,11 +925,47 @@ def build(
             sitemap_urls.append(ctx["page"]["url"])
 
     write_seo_files(site, dist, sitemap_urls, noindex)
+    write_htaccess(site, src, dist)
 
     broken = check_links(dist)
     if broken:
         raise BuildError("liens cassés :\n  " + "\n  ".join(broken))
     return warnings
+
+
+def htaccess_generators(site: dict, redirects: list[dict]) -> dict[str, Generator]:
+    """Valeurs propres au fichier .htaccess (hôte canonique, redirections)."""
+    host = urlsplit(site["url"]).hostname or ""
+    apex = host.removeprefix("www.")
+
+    def rule(item: dict) -> str:
+        source = item["from"].strip("/")
+        if source.endswith("/*"):
+            pattern = re.escape(source[:-2]) + "/.*"
+        else:
+            pattern = re.escape(source) + "/?"
+        return f'  RewriteRule ^{pattern}$ {item["to"]} [R=301,L,NE]'
+
+    return {
+        "htaccess_host": lambda ctx: host,
+        "htaccess_host_regex": lambda ctx: re.escape(host),
+        "htaccess_apex_regex": lambda ctx: re.escape(apex),
+        "htaccess_redirects": lambda ctx: "\n".join(rule(r) for r in redirects),
+    }
+
+
+def write_htaccess(site: dict, src: Path, dist: Path) -> None:
+    """Configuration Apache pour l'hébergement OVH (en-têtes de sécurité, HTTPS, redirections)."""
+    template = src / "server" / "htaccess.conf"
+    if not template.is_file():
+        return
+    redirects = load_json(src / "data" / "redirects.json")
+    for item in redirects:
+        if not item.get("from") or not str(item.get("to", "")).startswith("/"):
+            raise BuildError(f"redirects.json : entrée invalide {item}")
+    generators = {**GENERATORS, **htaccess_generators(site, redirects)}
+    text = render(template.read_text(encoding="utf-8"), {"site": site}, {}, generators)
+    (dist / ".htaccess").write_text(text, encoding="utf-8")
 
 
 def write_seo_files(site: dict, dist: Path, urls: list[str], noindex: bool = False) -> None:

@@ -415,7 +415,9 @@
       "type": "result",
       "title": "Protection de vos données et de votre réseau",
       "summary": "Nous vérifions vos sauvegardes, la sécurité de votre réseau et vos accès, puis nous mettons en place les protections adaptées à votre structure.",
-      "tarifs": [],
+      "tarifs": [
+        "antivirus_poste"
+      ],
       "service": "securite",
       "tips": [
         "Vérifiez quand a eu lieu votre dernière sauvegarde et si vous avez déjà testé sa restauration.",

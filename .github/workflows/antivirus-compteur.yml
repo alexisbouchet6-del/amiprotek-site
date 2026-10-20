@@ -1,0 +1,64 @@
+name: Compteur antivirus
+
+# Chaque jour, recompte les postes infectés sans antivirus actif sur les
+# 7 derniers jours à partir du registre de l'atelier (CSV publié), met à jour
+# src/data/infections.json, puis remet le site en ligne chez OVH si le chiffre a changé.
+#
+# Configuration (une seule fois) : Settings > Secrets and variables > Actions >
+# New repository secret, nom REGISTRE_CSV_URL, valeur = adresse CSV du registre.
+on:
+  schedule:
+    - cron: "17 4 * * *" # tous les jours à 4 h 17 UTC (6 h 17 à Paris en été, 5 h 17 en hiver)
+  workflow_dispatch:
+
+permissions:
+  contents: write # commit du fichier infections.json
+  actions: write  # relance des déploiements (OVH et aperçu)
+
+concurrency:
+  group: compteur-antivirus
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+
+      - name: Recomptage depuis le registre
+        env:
+          REGISTRE_CSV_URL: ${{ secrets.REGISTRE_CSV_URL }}
+        run: python tools/update_infections.py
+
+      - name: Contrôle du build avec le nouveau chiffre
+        run: python tools/build.py --strict
+
+      - name: Commit si le compteur a changé
+        id: commit
+        run: |
+          if git diff --quiet -- src/data/infections.json; then
+            echo "Compteur inchangé."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/data/infections.json
+          git commit -m "chore(compteur): postes infectés sans antivirus, 7 derniers jours"
+          git push
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+
+      # Un push fait par ce workflow ne déclenche pas les autres workflows :
+      # on relance donc explicitement la mise en ligne chez OVH et l'aperçu.
+      - name: Mise en ligne du nouveau chiffre (OVH et aperçu)
+        if: steps.commit.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh workflow run deploy-ovh.yml --ref main
+          gh workflow run pages.yml --ref main

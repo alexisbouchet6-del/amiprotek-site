@@ -245,6 +245,16 @@
       )
     );
     if (antivirus.stat) box.append(el("p", { class: "diag__av-stat" }, antivirus.stat));
+    if (antivirus.price) {
+      box.append(
+        el(
+          "p",
+          { class: "diag__av-price" },
+          `${antivirus.price.pro} € HT par poste et par an pour les professionnels, ${antivirus.price.part} € TTC pour les particuliers, ` +
+            `${antivirus.price.mobiles} smartphones inclus.`
+        )
+      );
+    }
     box.append(el("a", { href: antivirus.page }, "Pourquoi un antivirus actif est indispensable"));
     return box;
   }

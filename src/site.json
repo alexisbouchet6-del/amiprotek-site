@@ -25,9 +25,9 @@
     "tva": "FR44 817 637 390",
     "directeur_publication": "Hélène Kolossov, présidente",
     "conception": "Alexis Bouchet",
-    "hebergeur_nom": "Cloudflare, Inc.",
-    "hebergeur_adresse": "101 Townsend Street, San Francisco, CA 94107, États-Unis",
-    "hebergeur_contact": "www.cloudflare.com"
+    "hebergeur_nom": "OVH SAS, au capital de 50 000 000 €, RCS Lille Métropole 424 761 419",
+    "hebergeur_adresse": "2 rue Kellermann, 59100 Roubaix, France",
+    "hebergeur_contact": "+33 9 72 10 10 07, www.ovhcloud.com"
   },
   "services": [
     {
@@ -391,11 +391,10 @@
   "antivirus": {
     "product": "Kaspersky Next EDR Foundations",
     "edition": "European Edition",
-    "price_note": "Sur devis, selon le nombre de postes à protéger.",
-    "infections": {
-      "count": "",
-      "until": "",
-      "note": "Postes infectés pris en charge par AMI TECH sur 7 jours, dont l'antivirus était absent ou désactivé. Renseigner count (nombre) et until (dernier jour, AAAA-MM-JJ)."
+    "price": {
+      "pro": 70,
+      "part": 70,
+      "mobiles": 2
     }
   }
 }

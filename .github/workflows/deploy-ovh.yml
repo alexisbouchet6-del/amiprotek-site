@@ -1,0 +1,85 @@
+name: Déploiement OVH
+
+# Construit le site de production et l'envoie en SFTP sur l'hébergement web OVH :
+# - à chaque modification poussée sur main ;
+# - après chaque mise à jour quotidienne du compteur antivirus ;
+# - à la demande (onglet Actions > Déploiement OVH > Run workflow).
+#
+# Tant que les secrets OVH ne sont pas configurés, le workflow ne fait rien.
+# Secrets à créer (Settings > Secrets and variables > Actions) :
+#   OVH_SFTP_HOST         serveur SFTP, ex. ftp.cluster0XX.hosting.ovh.net
+#   OVH_SFTP_USER         utilisateur FTP/SFTP (SFTP coché dans l'espace client)
+#   OVH_SFTP_PASSWORD     mot de passe de cet utilisateur
+#   OVH_SFTP_KNOWN_HOSTS  empreinte du serveur (sortie de ssh-keyscan, voir README)
+#   OVH_SFTP_PATH         dossier du site sur l'hébergement (facultatif, défaut : www)
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-ovh
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: production
+    steps:
+      - name: Vérification de la configuration
+        id: cfg
+        env:
+          OVH_HOST: ${{ secrets.OVH_SFTP_HOST }}
+        run: |
+          if [ -z "$OVH_HOST" ]; then
+            echo "Secrets OVH absents : déploiement ignoré."
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@v6
+        if: steps.cfg.outputs.ready == 'true'
+
+      - uses: actions/setup-python@v6
+        if: steps.cfg.outputs.ready == 'true'
+        with:
+          python-version: "3.13"
+
+      - name: Build de production
+        if: steps.cfg.outputs.ready == 'true'
+        run: python tools/build.py --strict
+
+      - name: Installation de lftp
+        if: steps.cfg.outputs.ready == 'true'
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq lftp
+
+      - name: Envoi en SFTP
+        if: steps.cfg.outputs.ready == 'true'
+        env:
+          OVH_HOST: ${{ secrets.OVH_SFTP_HOST }}
+          OVH_USER: ${{ secrets.OVH_SFTP_USER }}
+          LFTP_PASSWORD: ${{ secrets.OVH_SFTP_PASSWORD }}
+          OVH_KNOWN_HOSTS: ${{ secrets.OVH_SFTP_KNOWN_HOSTS }}
+          OVH_PATH: ${{ secrets.OVH_SFTP_PATH }}
+        run: |
+          set -euo pipefail
+          if [ -z "$OVH_KNOWN_HOSTS" ]; then
+            echo "::error::Secret OVH_SFTP_KNOWN_HOSTS manquant : l'identité du serveur ne peut pas être vérifiée."
+            exit 1
+          fi
+          # Vérification stricte de l'identité du serveur (protection contre l'usurpation).
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          printf '%s\n' "$OVH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
+          # Mot de passe transmis par variable d'environnement (--env-password), jamais en ligne de commande.
+          lftp --env-password -u "$OVH_USER" "sftp://$OVH_HOST" -e "
+            set sftp:connect-program 'ssh -a -x -o StrictHostKeyChecking=yes';
+            set net:max-retries 2;
+            set net:timeout 30;
+            mirror --reverse --verbose --no-perms dist/ ${OVH_PATH:-www}/;
+            bye"
