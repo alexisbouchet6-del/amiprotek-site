@@ -191,7 +191,7 @@ Un aperçu public, non indexé par les moteurs de recherche, est publié par `.g
 - [ ] Ajouter le capital social (`legal.capital`), exigé par la LCEN pour une société.
 - [ ] Vérifier le numéro de téléphone d'OVH dans les mentions légales (`legal.hebergeur_contact`).
 - [ ] Configurer les secrets OVH et le registre du compteur antivirus.
-- [ ] Télécharger et committer la police (`python tools/fetch_fonts.py`).
+- [x] Police Archivo auto-hébergée et committée.
 - [ ] Valider les textes avec la direction d'AMIPROTEK.
 
 ## Conventions
