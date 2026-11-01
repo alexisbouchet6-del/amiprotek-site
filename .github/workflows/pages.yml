@@ -33,7 +33,7 @@ jobs:
       - name: Build de l'aperçu
         run: python tools/build.py --strict --noindex --base-path /amiprotek-site/
 
-      - uses: actions/configure-pages@v5
+      - uses: actions/configure-pages@v6
 
       - uses: actions/upload-pages-artifact@v5
         with:
